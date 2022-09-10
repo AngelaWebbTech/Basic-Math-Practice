@@ -9,6 +9,7 @@
 								//level 6 not tested for challengeLevel 1 - maybe new randNumGen functions to test these for appropriate variety?
 								//level 7 not testedd at all - maybe new randNumGen functions to test these for appropriate variety?
 //8.5.22 **NEXT STEP** add mathType and challengeLevel to arguments sent to randNumGen1/randNumGen2 functions, and update those functions to use that info
+//9.9.22 adding  a line to learn github
 
 //practice basic + - x % math
 
