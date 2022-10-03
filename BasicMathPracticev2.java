@@ -8,7 +8,6 @@
 //8.5.22 function(randNumGen2): //challengeLevel 5 not tested at all
 								//level 6 not tested for challengeLevel 1 - maybe new randNumGen functions to test these for appropriate variety?
 								//level 7 not testedd at all - maybe new randNumGen functions to test these for appropriate variety?
-//8.5.22 **NEXT STEP** add mathType and challengeLevel to arguments sent to randNumGen1/randNumGen2 functions, and update those functions to use that info
 
 //practice basic + - x % math
 
@@ -2028,7 +2027,7 @@ public class BasicMathPracticev2 {
 		int z=0;
 		
 		//test to prevent repetitive random numbers being returned
-		while (test=false){
+		while (test==false){
 			//open instance of Random class
 			Random randomGen = new Random();
 			
@@ -2040,20 +2039,32 @@ public class BasicMathPracticev2 {
 				//if (typeOfMath=1 or typeOfMath=2 or typeOfMath=5) & z<+/-2 from old1st, test=false
 				if ((typeOfMath.equals("1") || typeOfMath.equals("2") || typeOfMath.equals("5")) && (z<=(old1st+2) && z>=(old1st-2))){test=false;}
 				//else if (typeOfMath=3 or typeOfMath=4 or typeOfMath=6) & z=old1st, test=false
+				else if ((typeOfMath.equals("3") || typeOfMath.equals("4") || typeOfMath.equals("6")) && z==old1st) {test = false;}
 				//else test=true
+				else {test=true;}
 			}
 			
 			//else if challengeLevel=2
+			else if (challLevel.equals("2")) {
 				//if (typeOfMath=1 or typeOfMath=2 or typeOfMath=5) & z<+/-5 from old1st, test=false
+				if ((typeOfMath.equals("1") || typeOfMath.equals("2") || typeOfMath.equals("5")) && ((z+5)>=old1st)  || ((z-5)<=old1st)) {test=false;}
 				//else if (typeOfMath=3 & z=old1st, test=false
+				else if (typeOfMath.equals("3") && z==old1st) {test=false;}
 				//else if (typeOfMath=4 & z<+/-7 from old1st, test=false
+				else if (typeOfMath.equals("4") && ((z-7)<old1st || (z+7)>old1st)){test=false;}
 				//else test=true
-
+				else {test=true;}
+			}
+			
 			//else if challengeLevel=3
-				//if (typeOfMath=1 or typeOfMath=2 or typeOfMath=5) & z<+/-7, test=false
+			else if (challLevel.equals("3")) {
+				//if (typeOfMath=1 or typeOfMath=2 or typeOfMath=5) & z<+/-7 from old1st, test=false
+				if ((typeOfMath.equals("1") || typeOfMath.equals("2") || typeOfMath.equals("5")) && ((z-7)<old1st || (z+7)>old1st)) {test=false;}
 				//else if (typeOfMath=3 or typeOfMath=4 or typeOfMath=6) & z<+/-7 from old1st, test=false
+				else if ((typeOfMath.equals("3") || typeOfMath.equals("4") || typeOfMath.equals("6")) && ((z-7)<old1st  ||  (z+7)>old1st  ))
 				//else test=true
-
+			}
+			
 			//else if challengeLevel=4
 				//z<+/-123 from old1st, test=false
 				//else test=true
