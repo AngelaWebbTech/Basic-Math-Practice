@@ -9,7 +9,6 @@
 								//level 6 not tested for challengeLevel 1 - maybe new randNumGen functions to test these for appropriate variety?
 								//level 7 not testedd at all - maybe new randNumGen functions to test these for appropriate variety?
 //8.5.22 **NEXT STEP** add mathType and challengeLevel to arguments sent to randNumGen1/randNumGen2 functions, and update those functions to use that info
-//9.9.22 adding  a line to learn github
 
 //practice basic + - x % math
 
@@ -283,13 +282,13 @@ public class BasicMathPracticev2 {
 				for (int x=1;x<=numOfProblems;x++) {
 					if (challengeLevel.equals("1")) {
 						//generate random numbers, single digit
-						firstDigit = randNumGen1(0,10, firstDigit);
+						firstDigit = randNumGen1(0,10, firstDigit, challengeLevel, mathType);
 						secondDigit=randNumGen2(0,10, secondDigit);
 					}
 					else if (challengeLevel.equals("2")) {
 						//generate random numbers 10-89, without carrying when added
 						do {
-							firstDigit = randNumGen1(10,90, firstDigit);
+							firstDigit = randNumGen1(10,90, firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(10,90, secondDigit);
 							noCarrying = verifyNoCarry(firstDigit, secondDigit);
 						}
@@ -297,16 +296,16 @@ public class BasicMathPracticev2 {
 					}
 					else if (challengeLevel.equals("3")) {
 						//generate random numbers 0-99
-						firstDigit = randNumGen1(0,100,firstDigit);
+						firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 						secondDigit = randNumGen2(0,100,secondDigit);
 					}
 					else if (challengeLevel.equals("4")) {
 						//generate random numbers 2-4 digits each
-						firstDigit = randNumGen1(10,10000,firstDigit);
+						firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 						secondDigit = randNumGen2(10,10000,secondDigit);
 					}
 					else { //if challengeLevel=5, per challenge input
-						firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+						firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 						secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 					}
 					
@@ -364,7 +363,7 @@ public class BasicMathPracticev2 {
 					if (challengeLevel.equals("1")) {
 						//generate random numbers, single digit, no negative answers
 						do {
-							firstDigit = randNumGen1(0,10,firstDigit);
+							firstDigit = randNumGen1(0,10,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(0,10,secondDigit);
 							noNegatives = verifyNoNegatives(firstDigit, secondDigit);
 						}
@@ -373,7 +372,7 @@ public class BasicMathPracticev2 {
 					else if (challengeLevel.equals("2")) {
 						//generate random numbers 10-89, without borrowing or negatives when added
 						do {
-							firstDigit = randNumGen1(10,90,firstDigit);
+							firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(10,90,secondDigit);
 							noNegatives = verifyNoNegatives(firstDigit, secondDigit);
 							noBorrowing = verifyNoBorrowing(firstDigit, secondDigit);
@@ -383,7 +382,7 @@ public class BasicMathPracticev2 {
 					else if (challengeLevel.equals("3")) {
 						//generate random numbers 0-99, no negatives, borrowing permitted
 						do {
-							firstDigit = randNumGen1(0,100,firstDigit);
+							firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(0,100,secondDigit);
 							noNegatives = verifyNoNegatives(firstDigit, secondDigit);
 						}
@@ -391,14 +390,14 @@ public class BasicMathPracticev2 {
 					}
 					else if (challengeLevel.equals("4")) {
 						//generate random numbers 2-4 digits each, borrowing & negatives permitted
-						firstDigit = randNumGen1(10,10000,firstDigit);
+						firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 						secondDigit = randNumGen2(10,10000,secondDigit);
 					}
 					else { //if challengeLevel=5, per challenge input
 						//generate random digits, based on user input, no borrowing or negative answers allowed
 						if (carryBorrow.equalsIgnoreCase("n") && negativeAnswer.equalsIgnoreCase("n")) {
 							do {
-								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 								noBorrowing = verifyNoBorrowing(firstDigit, secondDigit);
 								noNegatives = verifyNoNegatives(firstDigit, secondDigit);
@@ -409,7 +408,7 @@ public class BasicMathPracticev2 {
 						//generate random digits, based on user input, negative answers allowed, but no borrowing
 						else if (carryBorrow.equalsIgnoreCase("n")) {
 							do {
-								firstDigit = randNumGen1(min1stDigit,(max2ndDigit+1),firstDigit);
+								firstDigit = randNumGen1(min1stDigit,(max2ndDigit+1),firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(min1stDigit,(max2ndDigit+1),secondDigit);
 								noBorrowing = verifyNoBorrowing(firstDigit, secondDigit);
 							}
@@ -419,7 +418,7 @@ public class BasicMathPracticev2 {
 						//generate random digits, based on user input, borrowing allowed, no negative answers allowed
 						else if (negativeAnswer.equalsIgnoreCase("n")) {
 							do {
-								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 								noNegatives = verifyNoNegatives(firstDigit, secondDigit);
 							}
@@ -428,7 +427,7 @@ public class BasicMathPracticev2 {
 						
 						//generate random digits, based on user input, negatives and borrowing allowed
 						else {
-							firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+							firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 						}
 					}//close challenge level 5 number generator block
@@ -486,28 +485,28 @@ public class BasicMathPracticev2 {
 					if (challengeLevel.equals("1")) { //only 1,2,5,10,11
 						//generate random numbers, 1, 2, 5, 10, and 11 sets only
 						while (firstDigit!=1 && firstDigit!=2 && firstDigit!=5 && firstDigit!=10 && firstDigit!=11) {
-							firstDigit = randNumGen1(1,12,firstDigit);
+							firstDigit = randNumGen1(1,12,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(1,12,secondDigit);
 						}
 					}
 					else if (challengeLevel.equals("2")) {//full 1-12 table
 						//generate random numbers 1-12
-						firstDigit = randNumGen1(1,13,firstDigit);
+						firstDigit = randNumGen1(1,13,firstDigit, challengeLevel, mathType);
 						secondDigit = randNumGen2(1,13,secondDigit);
 					}
 					else if (challengeLevel.equals("3")) {
 						//generate random numbers 0-99
-						firstDigit = randNumGen1(0,100,firstDigit);
+						firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 						secondDigit = randNumGen2(0,100,secondDigit);
 					}
 					else if (challengeLevel.equals("4")) {
 						//generate random numbers 2-4 digits each
-						firstDigit = randNumGen1(10,10000,firstDigit);
+						firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 						secondDigit = randNumGen2(10,10000,secondDigit);
 					}
 					else { //if challengeLevel=5, per challenge input
 						//generate random digits, based on user input
-							firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+							firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 						}
 					
@@ -567,7 +566,7 @@ public class BasicMathPracticev2 {
 					if (challengeLevel.equals("1")) {//multiplication table, no remainders
 						//generate random numbers
 						do {
-							firstDigit = randNumGen1(1,13,firstDigit);
+							firstDigit = randNumGen1(1,13,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(1,13,secondDigit);
 							firstDigitDbl = Double.valueOf(firstDigit);
 							secondDigitDbl = Double.valueOf(secondDigit);
@@ -578,7 +577,7 @@ public class BasicMathPracticev2 {
 					else if (challengeLevel.equals("2")) {//:2 digits divided by 1 digit, no remainders
 						//generate random numbers
 						do {
-							firstDigit = randNumGen1(10,90,firstDigit);
+							firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(1,10,secondDigit);
 							firstDigitDbl = Double.valueOf(firstDigit);
 							secondDigitDbl = Double.valueOf(secondDigit);
@@ -588,7 +587,7 @@ public class BasicMathPracticev2 {
 					}
 					else if (challengeLevel.equals("3")) {//2-3 digits divided by 1-2 digits, with remainders (written as whole numbers)
 						//generate random numbers
-							firstDigit = randNumGen1(10,1000,firstDigit);
+							firstDigit = randNumGen1(10,1000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(1,100,secondDigit);
 							firstDigitDbl = Double.valueOf(firstDigit);
 							secondDigitDbl = Double.valueOf(secondDigit);
@@ -596,7 +595,7 @@ public class BasicMathPracticev2 {
 					else if (challengeLevel.equals("4")) {//1-4 digits for each number, with remainders (written as decimals)
 						//generate random numbers 1-4 digits each
 						do { 
-							firstDigit = randNumGen1(1,10000,firstDigit);
+							firstDigit = randNumGen1(1,10000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(1,10000,secondDigit);
 							firstDigitDbl = Double.valueOf(firstDigit);
 							secondDigitDbl = Double.valueOf(secondDigit);
@@ -607,7 +606,7 @@ public class BasicMathPracticev2 {
 						//generate random digits, based on user input, no remainders allowed
 						if (allowRemainders.equalsIgnoreCase("n")) {
 							do {
-								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 								firstDigitDbl = Double.valueOf(firstDigit);
 								secondDigitDbl = Double.valueOf(secondDigit);
@@ -620,7 +619,7 @@ public class BasicMathPracticev2 {
 						else {
 							//generate random digits, based on user input, remainders allowed
 							do {
-								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 								firstDigitDbl = Double.valueOf(firstDigit);
 								secondDigitDbl = Double.valueOf(secondDigit);
@@ -816,20 +815,20 @@ public class BasicMathPracticev2 {
 			
 				for (int x=1;x<=numOfProblems;x++) {
 					//choose whether to do addition or subtraction (random number generator 1=add or 2=sub)
-					chooseAddorSub = randNumGen1(1,3,firstDigit);
+					chooseAddorSub = randNumGen1(1,3,firstDigit, challengeLevel, mathType);
 					chooseAddorSubStr = Integer.toString(chooseAddorSub);
 					
 					if (chooseAddorSub==1) {
 						//generate random digits to use
 						if (challengeLevel.equals("1")) {
 							//generate random numbers, single digit
-							firstDigit = randNumGen1(0,10,firstDigit);
+							firstDigit = randNumGen1(0,10,firstDigit, challengeLevel, mathType);
 							secondDigit=randNumGen2(0,10,secondDigit);
 						}
 						else if (challengeLevel.equals("2")) {
 							//generate random numbers 10-89, without carrying when added
 							do {
-								firstDigit = randNumGen1(10,90,firstDigit);
+								firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(10,90,secondDigit);
 								noCarrying = verifyNoCarry(firstDigit, secondDigit);
 							}
@@ -837,16 +836,16 @@ public class BasicMathPracticev2 {
 						}
 						else if (challengeLevel.equals("3")) {
 							//generate random numbers 0-99
-							firstDigit = randNumGen1(0,100,firstDigit);
+							firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(0,100,secondDigit);
 						}
 						else if (challengeLevel.equals("4")) {
 							//generate random numbers 2-4 digits each
-							firstDigit = randNumGen1(10,10000,firstDigit);
+							firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(10,10000,secondDigit);
 						}
 						else { //if challengeLevel=5, per challenge input
-							firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+							firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 						}
 						
@@ -897,7 +896,7 @@ public class BasicMathPracticev2 {
 						if (challengeLevel.equals("1")) {
 							//generate random numbers, single digit, no negative answers
 							do {
-								firstDigit = randNumGen1(0,10,firstDigit);
+								firstDigit = randNumGen1(0,10,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(0,10,secondDigit);
 								noNegatives = verifyNoNegatives(firstDigit, secondDigit);
 							}
@@ -906,7 +905,7 @@ public class BasicMathPracticev2 {
 						else if (challengeLevel.equals("2")) {
 							//generate random numbers 10-89, without borrowing or negatives when added
 							do {
-								firstDigit = randNumGen1(10,90,firstDigit);
+								firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(10,90,secondDigit);
 								noNegatives = verifyNoNegatives(firstDigit, secondDigit);
 								noBorrowing = verifyNoBorrowing(firstDigit, secondDigit);
@@ -916,7 +915,7 @@ public class BasicMathPracticev2 {
 						else if (challengeLevel.equals("3")) {
 							//generate random numbers 0-99, no negatives, borrowing permitted
 							do {
-								firstDigit = randNumGen1(0,100,firstDigit);
+								firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(0,100,secondDigit);
 								noNegatives = verifyNoNegatives(firstDigit, secondDigit);
 							}
@@ -924,14 +923,14 @@ public class BasicMathPracticev2 {
 						}
 						else if (challengeLevel.equals("4")) {
 							//generate random numbers 2-4 digits each, borrowing & negatives permitted
-							firstDigit = randNumGen1(10,10000,firstDigit);
+							firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(10,10000,secondDigit);
 						}
 						else { //if challengeLevel=5, per challenge input
 							//generate random digits, based on user input, no borrowing or negative answers allowed
 							if (carryBorrow.equalsIgnoreCase("n") && negativeAnswer.equalsIgnoreCase("n")) {
 								do {
-									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 									secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 									noBorrowing = verifyNoBorrowing(firstDigit, secondDigit);
 									noNegatives = verifyNoNegatives(firstDigit, secondDigit);
@@ -942,7 +941,7 @@ public class BasicMathPracticev2 {
 							//generate random digits, based on user input, negative answers allowed, but no borrowing
 							else if (carryBorrow.equalsIgnoreCase("n")) {
 								do {
-									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 									secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 									noBorrowing = verifyNoBorrowing(firstDigit, secondDigit);
 								}
@@ -952,7 +951,7 @@ public class BasicMathPracticev2 {
 							//generate random digits, based on user input, borrowing allowed, no negative answers allowed
 							else if (negativeAnswer.equalsIgnoreCase("n")) {
 								do {
-									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 									secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 									noNegatives = verifyNoNegatives(firstDigit, secondDigit);
 								}
@@ -961,7 +960,7 @@ public class BasicMathPracticev2 {
 							
 							//generate random digits, based on user input, negatives and borrowing allowed
 							else {
-								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 							}
 						}//close challenge level 5 random number generator
@@ -1021,7 +1020,7 @@ public class BasicMathPracticev2 {
 				
 				for (int x=1;x<=numOfProblems;x++) {
 					//choose whether to do multiplication or division (random number generator 1=add or 2=sub)
-					chooseMultorDiv = randNumGen1(1,3,firstDigit);
+					chooseMultorDiv = randNumGen1(1,3,firstDigit, challengeLevel, mathType);
 					chooseMultorDivStr = Integer.toString(chooseMultorDiv);
 					
 					if (chooseMultorDiv==1) {
@@ -1029,28 +1028,28 @@ public class BasicMathPracticev2 {
 						if (challengeLevel.equals("1")) { //only 1,2,5,10,11
 							//generate random numbers, 1, 2, 5, 10, and 11 sets only
 							while (firstDigit!=1 && firstDigit!=2 && firstDigit!=5 && firstDigit!=10 && firstDigit!=11) {
-								firstDigit = randNumGen1(1,12,firstDigit);
+								firstDigit = randNumGen1(1,12,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(1,12,secondDigit);
 							}
 						}
 						else if (challengeLevel.equals("2")) {//full 1-12 table
 							//generate random numbers 1-12
-							firstDigit = randNumGen1(1,13,firstDigit);
+							firstDigit = randNumGen1(1,13,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(1,13,secondDigit);
 						}
 						else if (challengeLevel.equals("3")) {
 							//generate random numbers 0-99
-							firstDigit = randNumGen1(0,100,firstDigit);
+							firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(0,100,secondDigit);
 						}
 						else if (challengeLevel.equals("4")) {
 							//generate random numbers 2-4 digits each
-							firstDigit = randNumGen1(10,10000,firstDigit);
+							firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(10,10000,secondDigit);
 						}
 						else { //if challengeLevel=5, per challenge input
 							//generate random digits, based on user input
-								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 							}
 						
@@ -1144,7 +1143,7 @@ public class BasicMathPracticev2 {
 						if (challengeLevel.equals("1")) {//multiplication table, no remainders
 							//generate random numbers
 							do {
-								firstDigit = randNumGen1(1,13,firstDigit);
+								firstDigit = randNumGen1(1,13,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(1,13,secondDigit);
 								firstDigitDbl = Double.valueOf(firstDigit);
 								secondDigitDbl = Double.valueOf(secondDigit);
@@ -1155,7 +1154,7 @@ public class BasicMathPracticev2 {
 						else if (challengeLevel.equals("2")) {//:2 digits divided by 1 digit, no remainders
 							//generate random numbers
 							do {
-								firstDigit = randNumGen1(10,90,firstDigit);
+								firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(1,10,secondDigit);
 								firstDigitDbl = Double.valueOf(firstDigit);
 								secondDigitDbl = Double.valueOf(secondDigit);
@@ -1165,7 +1164,7 @@ public class BasicMathPracticev2 {
 						}
 						else if (challengeLevel.equals("3")) {//2-3 digits divided by 1-2 digits, with remainders (written as whole numbers)
 							//generate random numbers
-								firstDigit = randNumGen1(10,1000,firstDigit);
+								firstDigit = randNumGen1(10,1000,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(1,100,secondDigit);
 								firstDigitDbl = Double.valueOf(firstDigit);
 								secondDigitDbl = Double.valueOf(secondDigit);
@@ -1174,7 +1173,7 @@ public class BasicMathPracticev2 {
 							//generate random numbers 1-4 digits each
 							//set up a do/while to filter out answers that are less than .1*****************************************************INCOMPLETE SECTION
 							//do { 
-								firstDigit = randNumGen1(1,10000,firstDigit);
+								firstDigit = randNumGen1(1,10000,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(1,10000,secondDigit);
 								firstDigitDbl = Double.valueOf(firstDigit);
 								secondDigitDbl = Double.valueOf(secondDigit);
@@ -1186,7 +1185,7 @@ public class BasicMathPracticev2 {
 							//set up a do/while to filter out answers that are less than .1*****************************************************INCOMPLETE SECTION
 							if (allowRemainders.equalsIgnoreCase("n")) {
 								do {
-									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 									secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 									firstDigitDbl = Double.valueOf(firstDigit);
 									secondDigitDbl = Double.valueOf(secondDigit);
@@ -1200,7 +1199,7 @@ public class BasicMathPracticev2 {
 								//generate random digits, based on user input, remainders allowed
 								//set up a do/while to filter out answers that are less than .1****************************************************INCOMPLETE SECTION
 								//do {
-									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 									secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 									firstDigitDbl = Double.valueOf(firstDigit);
 									secondDigitDbl = Double.valueOf(secondDigit);
@@ -1306,20 +1305,20 @@ public class BasicMathPracticev2 {
 			//use a number generator to choose whether to do add, sub, mult, or div
 				for (int x=1;x<=numOfProblems;x++) {
 					//choose whether to do addition or subtraction (random number generator 1=add or 2=sub)
-					chooseAddSubMultDiv = randNumGen1(1,5,firstDigit);
+					chooseAddSubMultDiv = randNumGen1(1,5,firstDigit, challengeLevel, mathType);
 					chooseAddSubMultDivStr = Integer.toString(chooseAddSubMultDiv);
 					
 					if (chooseAddSubMultDiv==1) {
 						//generate random digits to use
 						if (challengeLevel.equals("1")) {
 							//generate random numbers, single digit
-							firstDigit = randNumGen1(0,10,firstDigit);
+							firstDigit = randNumGen1(0,10,firstDigit, challengeLevel, mathType);
 							secondDigit=randNumGen2(0,10,secondDigit);
 						}
 						else if (challengeLevel.equals("2")) {
 							//generate random numbers 10-89, without carrying when added
 							do {
-								firstDigit = randNumGen1(10,90,firstDigit);
+								firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(10,90,secondDigit);
 								noCarrying = verifyNoCarry(firstDigit, secondDigit);
 							}
@@ -1327,16 +1326,16 @@ public class BasicMathPracticev2 {
 						}
 						else if (challengeLevel.equals("3")) {
 							//generate random numbers 0-99
-							firstDigit = randNumGen1(0,100,firstDigit);
+							firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(0,100,secondDigit);
 						}
 						else if (challengeLevel.equals("4")) {
 							//generate random numbers 2-4 digits each
-							firstDigit = randNumGen1(10,10000,firstDigit);
+							firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(10,10000,secondDigit);
 						}
 						else { //if challengeLevel=5, per challenge input
-							firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+							firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 						}
 						
@@ -1387,7 +1386,7 @@ public class BasicMathPracticev2 {
 						if (challengeLevel.equals("1")) {
 							//generate random numbers, single digit, no negative answers
 							do {
-								firstDigit = randNumGen1(0,10,firstDigit);
+								firstDigit = randNumGen1(0,10,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(0,10,secondDigit);
 								noNegatives = verifyNoNegatives(firstDigit, secondDigit);
 							}
@@ -1396,7 +1395,7 @@ public class BasicMathPracticev2 {
 						else if (challengeLevel.equals("2")) {
 							//generate random numbers 10-89, without borrowing or negatives when added
 							do {
-								firstDigit = randNumGen1(10,90,firstDigit);
+								firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(10,90,secondDigit);
 								noNegatives = verifyNoNegatives(firstDigit, secondDigit);
 								noBorrowing = verifyNoBorrowing(firstDigit, secondDigit);
@@ -1406,7 +1405,7 @@ public class BasicMathPracticev2 {
 						else if (challengeLevel.equals("3")) {
 							//generate random numbers 0-99, no negatives, borrowing permitted
 							do {
-								firstDigit = randNumGen1(0,100,firstDigit);
+								firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(0,100,secondDigit);
 								noNegatives = verifyNoNegatives(firstDigit, secondDigit);
 							}
@@ -1414,14 +1413,14 @@ public class BasicMathPracticev2 {
 						}
 						else if (challengeLevel.equals("4")) {
 							//generate random numbers 2-4 digits each, borrowing & negatives permitted
-							firstDigit = randNumGen1(10,10000,firstDigit);
+							firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(10,10000,secondDigit);
 						}
 						else { //if challengeLevel=5, per challenge input
 							//generate random digits, based on user input, no borrowing or negative answers allowed
 							if (carryBorrow.equalsIgnoreCase("n") && negativeAnswer.equalsIgnoreCase("n")) {
 								do {
-									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 									secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 									noBorrowing = verifyNoBorrowing(firstDigit, secondDigit);
 									noNegatives = verifyNoNegatives(firstDigit, secondDigit);
@@ -1432,7 +1431,7 @@ public class BasicMathPracticev2 {
 							//generate random digits, based on user input, negative answers allowed, but no borrowing
 							else if (carryBorrow.equalsIgnoreCase("n")) {
 								do {
-									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 									secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 									noBorrowing = verifyNoBorrowing(firstDigit, secondDigit);
 								}
@@ -1442,7 +1441,7 @@ public class BasicMathPracticev2 {
 							//generate random digits, based on user input, borrowing allowed, no negative answers allowed
 							else if (negativeAnswer.equalsIgnoreCase("n")) {
 								do {
-									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 									secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 									noNegatives = verifyNoNegatives(firstDigit, secondDigit);
 								}
@@ -1451,7 +1450,7 @@ public class BasicMathPracticev2 {
 							
 							//generate random digits, based on user input, negatives and borrowing allowed
 							else {
-								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 							}
 						}//close challenge level 5 random number generator
@@ -1503,28 +1502,28 @@ public class BasicMathPracticev2 {
 						if (challengeLevel.equals("1")) { //only 1,2,5,10,11
 							//generate random numbers, 1, 2, 5, 10, and 11 sets only
 							while (firstDigit!=1 && firstDigit!=2 && firstDigit!=5 && firstDigit!=10 && firstDigit!=11) {
-								firstDigit = randNumGen1(1,12,firstDigit);
+								firstDigit = randNumGen1(1,12,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(1,12,secondDigit);
 							}
 						}
 						else if (challengeLevel.equals("2")) {//full 1-12 table
 							//generate random numbers 1-12
-							firstDigit = randNumGen1(1,13,firstDigit);
+							firstDigit = randNumGen1(1,13,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(1,13,secondDigit);
 						}
 						else if (challengeLevel.equals("3")) {
 							//generate random numbers 0-99
-							firstDigit = randNumGen1(0,100,firstDigit);
+							firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(0,100,secondDigit);
 						}
 						else if (challengeLevel.equals("4")) {
 							//generate random numbers 2-4 digits each
-							firstDigit = randNumGen1(10,10000,firstDigit);
+							firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(10,10000,secondDigit);
 						}
 						else { //if challengeLevel=5, per challenge input
 							//generate random digits, based on user input
-								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+								firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 							}
 						
@@ -1619,7 +1618,7 @@ public class BasicMathPracticev2 {
 						if (challengeLevel.equals("1")) {//multiplication table, no remainders
 							//generate random numbers
 							do {
-								firstDigit = randNumGen1(1,13,firstDigit);
+								firstDigit = randNumGen1(1,13,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(1,13,secondDigit);
 								firstDigitDbl = Double.valueOf(firstDigit);
 								secondDigitDbl = Double.valueOf(secondDigit);
@@ -1630,7 +1629,7 @@ public class BasicMathPracticev2 {
 						else if (challengeLevel.equals("2")) {//:2 digits divided by 1 digit, no remainders
 							//generate random numbers
 							do {
-								firstDigit = randNumGen1(10,90,firstDigit);
+								firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(1,10,secondDigit);
 								firstDigitDbl = Double.valueOf(firstDigit);
 								secondDigitDbl = Double.valueOf(secondDigit);
@@ -1640,7 +1639,7 @@ public class BasicMathPracticev2 {
 						}
 						else if (challengeLevel.equals("3")) {//2-3 digits divided by 1-2 digits, with remainders (written as whole numbers)
 							//generate random numbers
-								firstDigit = randNumGen1(10,1000,firstDigit);
+								firstDigit = randNumGen1(10,1000,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(1,100,secondDigit);
 								firstDigitDbl = Double.valueOf(firstDigit);
 								secondDigitDbl = Double.valueOf(secondDigit);
@@ -1649,7 +1648,7 @@ public class BasicMathPracticev2 {
 							//generate random numbers 1-4 digits each
 							//set up a do/while to filter out answers that are less than .1*****************************************************INCOMPLETE SECTION
 							//do { 
-								firstDigit = randNumGen1(1,10000,firstDigit);
+								firstDigit = randNumGen1(1,10000,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(1,10000,secondDigit);
 								firstDigitDbl = Double.valueOf(firstDigit);
 								secondDigitDbl = Double.valueOf(secondDigit);
@@ -1661,7 +1660,7 @@ public class BasicMathPracticev2 {
 							//set up a do/while to filter out answers that are less than .1*****************************************************INCOMPLETE SECTION
 							if (allowRemainders.equalsIgnoreCase("n")) {
 								do {
-									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 									secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 									firstDigitDbl = Double.valueOf(firstDigit);
 									secondDigitDbl = Double.valueOf(secondDigit);
@@ -1675,7 +1674,7 @@ public class BasicMathPracticev2 {
 								//generate random digits, based on user input, remainders allowed
 								//set up a do/while to filter out answers that are less than .1****************************************************INCOMPLETE SECTION
 								//do {
-									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit);
+									firstDigit = randNumGen1(min1stDigit,(max1stDigit+1),firstDigit, challengeLevel, mathType);
 									secondDigit = randNumGen2(min2ndDigit,(max2ndDigit+1),secondDigit);
 									firstDigitDbl = Double.valueOf(firstDigit);
 									secondDigitDbl = Double.valueOf(secondDigit);
@@ -2024,7 +2023,7 @@ public class BasicMathPracticev2 {
 	}
 		
 	//choose random number for firstDigit
-	public static int randNumGen1 (int min, int max, int old1st) {
+	public static int randNumGen1 (int min, int max, int old1st, String challLevel, String typeOfMath) {
 		boolean test=false;
 		int z=0;
 		
@@ -2037,22 +2036,22 @@ public class BasicMathPracticev2 {
 			z = randomGen.nextInt(min, max);
 
 			//if challengeLevel=1
-			if (challengeLevel.equals("1")) {
-				//if (mathType=1 or mathType=2 or mathType=5) & z<+/-2 from old1st, test=false
-				if ((mathType.equals("1") || mathType.equals("2") || mathType.equals("5")) && (z<=(old1st+2) && z>=(old1st-2)){test=false;}
-				//else if (mathType=3 or mathType=4 or mathType=6) & z=old1st, test=false
+			if (challLevel.equals("1")) {
+				//if (typeOfMath=1 or typeOfMath=2 or typeOfMath=5) & z<+/-2 from old1st, test=false
+				if ((typeOfMath.equals("1") || typeOfMath.equals("2") || typeOfMath.equals("5")) && (z<=(old1st+2) && z>=(old1st-2))){test=false;}
+				//else if (typeOfMath=3 or typeOfMath=4 or typeOfMath=6) & z=old1st, test=false
 				//else test=true
 			}
 			
 			//else if challengeLevel=2
-				//if (mathType=1 or mathType=2 or mathType=5) & z<+/-5 from old1st, test=false
-				//else if (mathType=3 & z=old1st, test=false
-				//else if (mathType=4 & z<+/-7 from old1st, test=false
+				//if (typeOfMath=1 or typeOfMath=2 or typeOfMath=5) & z<+/-5 from old1st, test=false
+				//else if (typeOfMath=3 & z=old1st, test=false
+				//else if (typeOfMath=4 & z<+/-7 from old1st, test=false
 				//else test=true
 
 			//else if challengeLevel=3
-				//if (mathType=1 or mathType=2 or mathType=5) & z<+/-7, test=false
-				//else if (mathType=3 or mathType=4 or mathType=6) & z<+/-7 from old1st, test=false
+				//if (typeOfMath=1 or typeOfMath=2 or typeOfMath=5) & z<+/-7, test=false
+				//else if (typeOfMath=3 or typeOfMath=4 or typeOfMath=6) & z<+/-7 from old1st, test=false
 				//else test=true
 
 			//else if challengeLevel=4
@@ -2083,20 +2082,20 @@ public class BasicMathPracticev2 {
 			z = randomGen.nextInt(min, max);
 
 			//if challengeLevel=1
-				//if (mathType=1 or mathType=2 or mathType=5) & z<+/-2 from old2nd, test=false
-				//else if mathType=3 & z<+/-2, test=false
-				//else if mathType=4 & z=old2nd, test=false
+				//if (typeOfMath=1 or typeOfMath=2 or typeOfMath=5) & z<+/-2 from old2nd, test=false
+				//else if typeOfMath=3 & z<+/-2, test=false
+				//else if typeOfMath=4 & z=old2nd, test=false
 				//else test=true
 
 			//else if challengeLevel=2
-				//if (mathType=1 or mathType=2 or mathType=5) & z<+/-5 from old2nd, test=false
-				//else if (mathType=3 & z=old2nd, test=false
-				//else if (mathType=4 & z<+/-7 from old2nd, test=false
+				//if (typeOfMath=1 or typeOfMath=2 or typeOfMath=5) & z<+/-5 from old2nd, test=false
+				//else if (typeOfMath=3 & z=old2nd, test=false
+				//else if (typeOfMath=4 & z<+/-7 from old2nd, test=false
 				//else test=true
 
 			//else if challengeLevel=3
-				//if (mathType=1 or mathType=2 or mathType=5) & z<+/-7 from old2nd, test=false
-				//else if (mathType=3 or mathType=4 or mathType=6) & z<+/-7 from old2nd, test=false
+				//if (typeOfMath=1 or typeOfMath=2 or typeOfMath=5) & z<+/-7 from old2nd, test=false
+				//else if (typeOfMath=3 or typeOfMath=4 or typeOfMath=6) & z<+/-7 from old2nd, test=false
 				//else test=true
 
 			//else if challengeLevel=4
