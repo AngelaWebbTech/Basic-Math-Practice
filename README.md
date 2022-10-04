@@ -2,9 +2,10 @@
 
 a small project to practice some java skills
 
-for loops
-while loops
-switch case
+for loops 
+while loops 
+switchcase 
 functions
-Random class
-
+arrays
+Random
+FileWriter 
