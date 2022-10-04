@@ -1,13 +1,9 @@
 // 7.1.22 timer starts/stops needs to be added (make this a function that is called in each section if needed)
-//more than 3 rounds, the final output runs off screen. go here: https://www.educba.com/jscrollpane-in-java/ to learn how to JScrollPane
-//7.20.22 need practice with fileWriter/printWriter - make an option to save the custom level setup & the high scores records into a file
+//more than 3 rounds, the final output runs off screen. add JScrollPane
+//7.20.22 (fileWriter/printWriter) make an option to save the custom level setup & the high scores records into a file
 //7.24.22 timer does not determine points - timer keeps track of time as a measure of speed, points are added same as no-timer method in all levels
-//8.5.22 function (randNumGen1)://challengeLevel 5 not tested at all
-								//level 6 not tested for challengeLevel 2 - maybe new randNumGen functions to test these for appropriate variety?
-								//level 7 not testedd at all - maybe new randNumGen functions to test these for appropriate variety?
-//8.5.22 function(randNumGen2): //challengeLevel 5 not tested at all
-								//level 6 not tested for challengeLevel 1 - maybe new randNumGen functions to test these for appropriate variety?
-								//level 7 not testedd at all - maybe new randNumGen functions to test these for appropriate variety?
+//8.5.22 function (randNumGen1)://challengeLevel 5 not tested for good variety at all
+//8.5.22 function(randNumGen2): //challengeLevel 5 not tested for good variety at all
 
 //practice basic + - x % math
 
@@ -108,13 +104,13 @@ public class BasicMathPracticev2 {
 			challengeLevel = JOptionPane.showInputDialog("Excellent choice!\n\n"
 														+ "How challenging do you want the problems to be?\n(choose a number)\n\n"
 														+ "1. Beginner:\n\tAdd/Sub:single digits only (answers may be 2 digits)\n\tMult: 1,2,5,10,11 sets only"
-														+ 		"\n\tDiv:multiplication table, no remainders"
+														+ 		"\n\tDiv:multiplication table, no remainders\n"
 														+ "2. Easy:\n\tAdd/Sub:only double digits, no carrying/borrowing\n\tMult:full standard 12x12 table"
-														+ 		"\n\tDiv:2 digits divided by 1 digit, no remainders"
+														+ 		"\n\tDiv:2 digits divided by 1 digit, no remainders\n"
 														+ "3. Medium:\n\tAdd/Sub:1-2 digit numbers, with carrying/borrowing possible\n\tMult:1-2 digit numbers"
-														+ 		"\n\tDiv: 2-3 digits divided by 1-2 digits, with remainders"
+														+ 		"\n\tDiv: 2-3 digits divided by 1-2 digits, with remainders\n"
 														+ "4. Hard:\n\tAdd/Sub2-4 digit numbers, with carrying/borrowing & negative answers possible"
-														+ 		"\n\tMult:2-4 digit numbers\n\tDiv:1-4 digits for each number, with remainders (written as decimals)"
+														+ 		"\n\tMult:2-4 digit numbers\n\tDiv:1-4 digits for each number, with remainders (written as decimals)\n"
 														+ "5. Custom: choose your own conditions\n");
 			
 			//if challengeLevel is not valid, prompt again until a valid choice is made
@@ -123,13 +119,13 @@ public class BasicMathPracticev2 {
 				do {
 					challengeLevel = JOptionPane.showInputDialog(null, "Oops! That option is not available.\n\nChoose a number 1-5:\n\n"
 							+ "1. Beginner:\n\tAdd/Sub:single digits only (answers may be 2 digits)\n\tMult: 1,2,5,10,11 sets only"
-							+ 		"\n\tDiv:multiplication table, no remainders"
+							+ 		"\n\tDiv:multiplication table, no remainders\n"
 							+ "2. Easy:\n\tAdd/Sub:only double digits, no carrying/borrowing\n\tMult:full standard 12x12 table"
-							+ 		"\n\tDiv:2 digits divided by 1 digit, no remainders"
+							+ 		"\n\tDiv:2 digits divided by 1 digit, no remainders\n"
 							+ "3. Medium:\n\tAdd/Sub:1-2 digit numbers, with carrying/borrowing possible\n\tMult:1-2 digit numbers"
-							+ 		"\n\tDiv: 2-3 digits divided by 1-2 digits, with remainders"
+							+ 		"\n\tDiv: 2-3 digits divided by 1-2 digits, with remainders\n"
 							+ "4. Hard:\n\tAdd/Sub2-4 digit numbers, with carrying/borrowing & negative answers possible"
-							+ 		"\n\tMult:2-4 digit numbers\n\tDiv:1-4 digits for each number, with remainders (written as decimals)"
+							+ 		"\n\tMult:2-4 digit numbers\n\tDiv:1-4 digits for each number, with remainders (written as decimals)\n"
 							+ "5. Custom: choose your own conditions\n","Oops!",JOptionPane.INFORMATION_MESSAGE);
 				}
 				while (!challengeLevel.equalsIgnoreCase("1") && !challengeLevel.equalsIgnoreCase("2") && !challengeLevel.equalsIgnoreCase("3") && !challengeLevel.equalsIgnoreCase("4")
@@ -1019,10 +1015,12 @@ public class BasicMathPracticev2 {
 				
 				for (int x=1;x<=numOfProblems;x++) {
 					//choose whether to do multiplication or division (random number generator 1=add or 2=sub)
-					chooseMultorDiv = randNumGen1(1,3,firstDigit, challengeLevel, mathType);
+					Random multOrDiv = new Random();
+					chooseMultorDiv = multOrDiv.nextInt(1,3);
 					chooseMultorDivStr = Integer.toString(chooseMultorDiv);
 					
 					if (chooseMultorDiv==1) {
+						mathType.equals("3"); //reassigned to allow randNumGen1/randNumGen2 functions to work
 						//generate random digits to use
 						if (challengeLevel.equals("1")) { //only 1,2,5,10,11
 							//generate random numbers, 1, 2, 5, 10, and 11 sets only
@@ -1138,6 +1136,7 @@ public class BasicMathPracticev2 {
 					
 					//if division is chosen
 					if (chooseMultorDiv==2) {
+						mathType.equals("4"); //reassigned to allow randNumGen1/randNumGen2 functions to work
 						//generate random digits to use
 						if (challengeLevel.equals("1")) {//multiplication table, no remainders
 							//generate random numbers
@@ -1304,10 +1303,12 @@ public class BasicMathPracticev2 {
 			//use a number generator to choose whether to do add, sub, mult, or div
 				for (int x=1;x<=numOfProblems;x++) {
 					//choose whether to do addition or subtraction (random number generator 1=add or 2=sub)
-					chooseAddSubMultDiv = randNumGen1(1,5,firstDigit, challengeLevel, mathType);
+					Random randomAddSubMultDiv = new Random();
+					chooseAddSubMultDiv = randomAddSubMultDiv.nextInt(1,5);
 					chooseAddSubMultDivStr = Integer.toString(chooseAddSubMultDiv);
 					
 					if (chooseAddSubMultDiv==1) {
+						mathType.equals("1"); //changed to allow randNumGen1,randNumGen2 functions to work
 						//generate random digits to use
 						if (challengeLevel.equals("1")) {
 							//generate random numbers, single digit
@@ -1382,6 +1383,7 @@ public class BasicMathPracticev2 {
 					
 					//if chooseAdorSub is 2 (subtraction)
 					else if (chooseAddSubMultDiv==2){
+						mathType.equals("2");  //changed to allow randNumGen1,randNumGen2 functions to work
 						if (challengeLevel.equals("1")) {
 							//generate random numbers, single digit, no negative answers
 							do {
@@ -1497,6 +1499,7 @@ public class BasicMathPracticev2 {
 					
 					//if multiplication is chosen
 					if (chooseAddSubMultDiv==3) {
+						mathType.equals("3");  //changed to allow randNumGen1,randNumGen2 functions to work
 						//generate random digits to use
 						if (challengeLevel.equals("1")) { //only 1,2,5,10,11
 							//generate random numbers, 1, 2, 5, 10, and 11 sets only
@@ -1613,6 +1616,7 @@ public class BasicMathPracticev2 {
 					
 					//if division is chosen
 					if (chooseAddSubMultDiv==4) {
+						mathType.equals("4");  //changed to allow randNumGen1,randNumGen2 functions to work
 						//generate random digits to use
 						if (challengeLevel.equals("1")) {//multiplication table, no remainders
 							//generate random numbers
@@ -2077,11 +2081,6 @@ public class BasicMathPracticev2 {
 			else {test=true;}
 			
 			//challengeLevel 5 not tested at all
-			//typeOfMath 6 not tested for challengeLevel 2 - maybe new randNumGen functions to test these for appropriate variety?
-						//must meet criteria for both multiplication and division (typeOfMath 3 and 4)
-						//challengeLevel criteria: Mult:full standard 12x12 table, Div:2 digits divided by 1 digit, no remainders
-			//typeOfMath 7 not testedd at all - maybe new randNumGen functions to test these for appropriate variety?
-					//typeOfMath7 is all functions (add, sub, mult, divide)
 		}//close while test=false (choose & retest loop)
 
 		return z;
@@ -2114,6 +2113,7 @@ public class BasicMathPracticev2 {
 			}
 			//else if challengeLevel=2
 			else if (challLevel.equals("2")) {
+				//typeOfMath=6 is validated through converting the mathType to 3 or 4 in main
 				//if (typeOfMath=1 or typeOfMath=2 or typeOfMath=5) & z<+/-5 from old2nd, test=false
 				if ((typeOfMath.equals("1") || typeOfMath.equals("2") || typeOfMath.equals("5")) && ((z>=old2nd && (z-5)<old2nd) || (z<=old2nd && (z+5)>old2nd ))) 
 					{test=false;}
@@ -2149,8 +2149,6 @@ public class BasicMathPracticev2 {
 			else {test=true;}
 			
 			//challengeLevel 5 not tested at all
-			//level 6 not tested for challengeLevel 1 - maybe new randNumGen functions to test these for appropriate variety?
-			//level 7 not testedd at all - maybe new randNumGen functions to test these for appropriate variety?
 		}//close while test=false (choose & retest loop)
 		return z;
 	}
