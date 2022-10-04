@@ -1,9 +1,11 @@
 // 7.1.22 timer starts/stops needs to be added (make this a function that is called in each section if needed)
 //more than 3 rounds, the final output runs off screen. add JScrollPane
-//7.20.22 (fileWriter/printWriter) make an option to save the custom level setup & the high scores records into a file
+//7.20.22 (fileWriter/printWriter) make an option to save the custom level setup
 //7.24.22 timer does not determine points - timer keeps track of time as a measure of speed, points are added same as no-timer method in all levels
 //8.5.22 function (randNumGen1)://challengeLevel 5 not tested for good variety at all
 //8.5.22 function(randNumGen2): //challengeLevel 5 not tested for good variety at all
+//10.4.22 current highScores files will be created/written each time game is played. should be created, stored, then retrieved/appended for each new game.
+//10.4.22 add a mainmenu option to see high scores
 
 //practice basic + - x % math
 
@@ -11,10 +13,11 @@ import javax.swing.JOptionPane; //for UI
 import java.util.Random; //for random number generator
 import java.util.ArrayList; //for storing data for each round
 import java.util.Scanner; //for reading answer inputs for division
+import java.io.FileWriter; //filewriter for high scores file
 
 public class BasicMathPracticev2 {
 
-	public static void main(String[] args){
+	public static void main(String[] args) {
 		
 		//--------------------------------------------------------------------------------------------------------------------------------------
 		//-------------------                            GLOBAL VARIABLES                                                     ------------------
@@ -1787,6 +1790,16 @@ public class BasicMathPracticev2 {
 		//------------------------------------------------------------------------
 			
 		finalScore = (Double.valueOf(totalCorrectAnswers))/(Double.valueOf(totalProblems));
+		
+		//store final scores (username, finalScore, totalCorrectAnswers, totalProblems)
+		try {
+			FileWriter highScoresFW = new FileWriter("highscores.txt");
+			highScoresFW.write(username + "\n" + finalScore + "\n" + totalCorrectAnswers + "\n" + totalProblems);
+			highScoresFW.close();
+		}
+		catch (Exception e){JOptionPane.showMessageDialog(null, "Something went wrong.", "uh oh", JOptionPane.ERROR_MESSAGE);}
+		
+		//display final scores
 		if (finalScore==1) {
 			JOptionPane.showMessageDialog(null, "PERFECT SCORE!\n\n You answered all " + totalCorrectAnswers + " problems correctly!");
 		}
@@ -1799,6 +1812,7 @@ public class BasicMathPracticev2 {
 		else {
 		JOptionPane.showMessageDialog(null, "Good try.\n\nYou answered " + totalCorrectAnswers + " out of " + totalProblems + " problems correctly!");
 		} 
+		
 		
 			
 		//------------------------------------------------------------------------
@@ -1816,6 +1830,8 @@ public class BasicMathPracticev2 {
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
+		
+//why is this section here?*********************************************************************************************************************************CHECK ON THIS
 		while ((!playAgain.equalsIgnoreCase("y")) && (!playAgain.equalsIgnoreCase("n")));
 			//store scores from current round in score array
 			scoreRecord.add(pointTotal);
