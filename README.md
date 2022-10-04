@@ -1,3 +1,3 @@
 # Basic Math Practice
 
-This project could be written in a much more simple way, but the purpose of it is to provide a place to practice various aspects of procedural programming in java.
+This project could be written in a much more simple way, but I am a student, and the purpose of this game is to provide a practice area for various aspects of procedural programming in java.
