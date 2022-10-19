@@ -1,11 +1,9 @@
 // 7.1.22 timer starts/stops needs to be added (make this a function that is called in each section if needed)
 //more than 3 rounds, the final output runs off screen. add JScrollPane
-//7.20.22 (fileWriter/printWriter) make an option to save the custom level setup
+//7.20.22 (fileWriter/printWriter) need to add an option to save the custom level setup
 //7.24.22 timer does not determine points - timer keeps track of time as a measure of speed, points are added same as no-timer method in all levels
 //8.5.22 function (randNumGen1)://challengeLevel 5 not tested for good variety at all
 //8.5.22 function(randNumGen2): //challengeLevel 5 not tested for good variety at all
-//10.4.22 current highScores files will be created/written each time game is played. should be created, stored, then retrieved/appended for each new game.
-//10.4.22 add a mainmenu option to see high scores
 
 //practice basic + - x % math
 
@@ -14,6 +12,7 @@ import java.util.Random; //for random number generator
 import java.util.ArrayList; //for storing data for each round
 import java.util.Scanner; //for reading answer inputs for division
 import java.io.FileWriter; //filewriter for high scores file
+import java.io.*; //for FileReader in case(8)
 
 public class BasicMathPracticev2 {
 
@@ -32,7 +31,7 @@ public class BasicMathPracticev2 {
 		
 		String allowRemainders="", carryBorrow="", challengeLevel, chooseAddorSubStr, chooseAddSubMultDivStr, chooseMultorDivStr, correctAnswerScoreInput="", mathType="", 
 				negativeAnswer="", numOfProblemsInput, playAgain="Y", remainderEntered="", remainderInput, scoreOutput="", userGuessInput="", 
-				username, wholeNumbersEntered="", wholeOrDecimal="", wrongAnswerScoreInput="";
+				username, wholeNumbersEntered="", wholeOrDecimal="", wrongAnswerScoreInput="", line;
 		
 		boolean noBorrowing, noCarrying, noNegatives, noRemainders;
 		
@@ -72,11 +71,12 @@ public class BasicMathPracticev2 {
 														+ "5. both addition & subtraction\n"
 														+ "6. both multiplication & division\n"
 														+ "7. all\n"
-														+ "8. exit the game" );
+														+ "8. see high scores"
+														+ "9. exit the game" );
 			
 			//if mathType is not valid, prompt again until a valid choice is made
 			if (!mathType.equalsIgnoreCase("1") && !mathType.equalsIgnoreCase("2") && !mathType.equalsIgnoreCase("3") && !mathType.equalsIgnoreCase("4")
-				&& !mathType.equalsIgnoreCase("5") && !mathType.equalsIgnoreCase("6") && !mathType.equalsIgnoreCase("7")) { 
+				&& !mathType.equalsIgnoreCase("5") && !mathType.equalsIgnoreCase("6") && !mathType.equalsIgnoreCase("7") && !mathType.equalsIgnoreCase("8")) { 
 				do {
 					mathType = JOptionPane.showInputDialog(null, "Oops! That option is not available.\n\nPlease choose a number 1-7:\n\n"
 						+ "What would you like to do today?\n\n"
@@ -86,10 +86,12 @@ public class BasicMathPracticev2 {
 						+ "4. division\n"
 						+ "5. both addition & subtraction\n"
 						+ "6. both multiplication & division\n"
-						+ "7. all\n","Oops!",JOptionPane.INFORMATION_MESSAGE);
+						+ "7. all\n"
+						+ "8. see high scores\n"
+						+ "9. exit the game","Oops!",JOptionPane.INFORMATION_MESSAGE);
 				}
 				while (!mathType.equalsIgnoreCase("1") && !mathType.equalsIgnoreCase("2") && !mathType.equalsIgnoreCase("3") && !mathType.equalsIgnoreCase("4")
-						&& !mathType.equalsIgnoreCase("5") && !mathType.equalsIgnoreCase("6") && !mathType.equalsIgnoreCase("7"));
+						&& !mathType.equalsIgnoreCase("5") && !mathType.equalsIgnoreCase("6") && !mathType.equalsIgnoreCase("7") && !mathType.equalsIgnoreCase("8"));
 			}
 			
 			
@@ -1775,7 +1777,29 @@ public class BasicMathPracticev2 {
 			} //close all play loop
 			
 			//break
-			break;					
+			break;
+			
+			//see high scores
+			case("8"):
+				//show high scores file
+				JOptionPane.showMessageDialog(null, "This option has not been set up yet.", "Coming soon", JOptionPane.WARNING_MESSAGE);
+				
+				line = null; //temp variable to get BufferedReader working
+				
+				try
+		        {
+		            FileReader highScoresReader = new FileReader("highscores.txt");
+		            BufferedReader bufferedReaderForHighScores = new BufferedReader(highScoresReader);
+		            
+		            while((line = bufferedReaderForHighScores.readLine()) != null)
+		                System.out.println(line);
+		            
+		            bufferedReaderForHighScores.close();
+		        }
+		        catch(IOException ex) {
+		        	JOptionPane.showMessageDialog(null, "Uh oh!\nSomething went wrong.\n\n(exception: " + ex, "Error", JOptionPane.ERROR_MESSAGE, null);
+		        }
+			break;
 	
 		}//close switch-case for gameplay
 			
