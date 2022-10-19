@@ -4,6 +4,10 @@
 //7.24.22 timer does not determine points - timer keeps track of time as a measure of speed, points are added same as no-timer method in all levels
 //8.5.22 function (randNumGen1)://challengeLevel 5 not tested for good variety at all
 //8.5.22 function(randNumGen2): //challengeLevel 5 not tested for good variety at all
+//10.19.22 at end of game, question exists to keep custom settings for challengeLevel=5. Need this question for all levels. Also need to add ability to replay the same settings instead of 
+				//reentering mathType and challengeLevel=5
+//10.19.22 should customSettings array be permanent? create a user-identified array that they can pull up later? would need an option to erase it.
+//10.19.22 in custom level setup, maximum numbers are allowed to be smaller than the minimum numbers (for digits chosen)
 
 //practice basic + - x % math
 
@@ -31,7 +35,7 @@ public class BasicMathPracticev2 {
 		
 		String allowRemainders="", carryBorrow="", challengeLevel, chooseAddorSubStr, chooseAddSubMultDivStr, chooseMultorDivStr, correctAnswerScoreInput="", mathType="", 
 				negativeAnswer="", numOfProblemsInput, playAgain="Y", remainderEntered="", remainderInput, scoreOutput="", userGuessInput="", 
-				username, wholeNumbersEntered="", wholeOrDecimal="", wrongAnswerScoreInput="", line;
+				username, wholeNumbersEntered="", wholeOrDecimal="", wrongAnswerScoreInput="", line, saveCustomSettings, minMaxInput;
 		
 		boolean noBorrowing, noCarrying, noNegatives, noRemainders;
 		
@@ -42,6 +46,10 @@ public class BasicMathPracticev2 {
 		
 		//ArrayList for pointTotal, totalCorrectAnswers, totalProblems
 		java.util.List<Integer> scoreRecord = new ArrayList<Integer>();
+		
+		//Arrays for temp storage of Custom Settings (challengeLevel = 5)
+		String[] customSettingsArrayStr = new String[6];
+		int[] customSettingsArrayInt = new int[6];
 		
 
         //--------------------------------------------------------------------------------------------------------------------------------------
@@ -145,11 +153,62 @@ public class BasicMathPracticev2 {
 			
 			if (challengeLevel.equals("5")) {
 				
-				//prompt user for min/max numbers for 1st/2nd digits (call minMax function)
-				min1stDigit = minDigit();
-				max1stDigit = maxDigit();
-				min2ndDigit = minDigit();
-				max2ndDigit = maxDigit();
+				//prompt for minimum limits for 1st & 2nd digits for custom challenge level (5)
+				//minimum 1st Digit
+				try {
+					minMaxInput = JOptionPane.showInputDialog("Welcome to the Custom Setup\n\n"
+					+ "What is the smallest first number you want us to choose for the challenges?\n(whole positive numbers only)\n\n"
+					+ "3 is the \"first number\" in all of the following:\n"
+					+ "3+1=4  3-2=1  3*2=6   3/1.5=2");
+					min1stDigit = Integer.parseInt(minMaxInput);
+				}
+				catch(Exception e) {
+					minMaxInput="";
+					JOptionPane.showMessageDialog(null,"Oops!\n\nRemember:\nOnly enter numbers.\n\nDo not include letters, negatives, decimals, fractions, commas, etc.\n\n"
+							+ "Press OK to try again.", "Oops!",JOptionPane.INFORMATION_MESSAGE);
+				}
+				
+				//maximum 1st digit
+				try {
+					minMaxInput = JOptionPane.showInputDialog("Welcome to the Custom Setup\n\n"
+					+ "What is the largest first number you want us to choose for the challenges?\n(whole positive numbers only)\n\n"
+					+ "3 is the \"first number\" in all of the following:\n"
+					+ "3+1=4  3-2=1  3*2=6   3/1.5=2");
+					max1stDigit = Integer.parseInt(minMaxInput);
+				}
+				catch(Exception e) {
+					minMaxInput="";
+					JOptionPane.showMessageDialog(null,"Oops!\n\nRemember:\nOnly enter numbers.\n\nDo not include letters, negatives, decimals, fractions, commas, etc.\n\n"
+							+ "Press OK to try again.", "Oops!",JOptionPane.INFORMATION_MESSAGE);
+				}
+				
+				//minimum 2nd digit
+				try {
+					minMaxInput = JOptionPane.showInputDialog("Welcome to the Custom Setup\n\n"
+					+ "What is the smallest second number you want us to choose for the challenges?\n(whole positive numbers only)\n\n"
+					+ "3 is the \"second number\" in all of the following:\n"
+					+ "1+3=4  4-3=1  2*3=6   6/3=2");
+					min2ndDigit = Integer.parseInt(minMaxInput);
+				}
+				catch(Exception e) {
+					minMaxInput="";
+					JOptionPane.showMessageDialog(null,"Oops!\n\nRemember:\nOnly enter numbers.\n\nDo not include letters, negatives, decimals, fractions, commas, etc.\n\n"
+							+ "Press OK to try again.", "Oops!",JOptionPane.INFORMATION_MESSAGE);
+				}
+				
+				//maximum 2nd digit
+				try {
+					minMaxInput = JOptionPane.showInputDialog("Welcome to the Custom Setup\n\n"
+					+ "What is the largest second number you want us to choose for the challenges?\n(whole positive numbers only)\n\n"
+					+ "3 is the \"first number\" in all of the following:\n"
+					+ "1+3=4  4-3=1  2*3=6   6/3=2");
+					max1stDigit = Integer.parseInt(minMaxInput);
+				}
+				catch(Exception e) {
+					minMaxInput="";
+					JOptionPane.showMessageDialog(null,"Oops!\n\nRemember:\nOnly enter numbers.\n\nDo not include letters, negatives, decimals, fractions, commas, etc.\n\n"
+							+ "Press OK to try again.", "Oops!",JOptionPane.INFORMATION_MESSAGE);
+				}
 					
 				//if mathType=1,2,5, or 7: prompt user: do you want to include problems with carrying & borrowing?
 				if (mathType.equals("1") || mathType.equals("2") || mathType.equals("5") || mathType.equals("7")) {	
@@ -1881,6 +1940,41 @@ public class BasicMathPracticev2 {
 				pointTotal=0;
 				totalProblems=0;
 				totalCorrectAnswers=0;
+				
+			// if challengeLevel = 5, prompt for re-using same custom settings again
+			if (challengeLevel.equals("5")) {
+				saveCustomSettings = JOptionPane.showInputDialog(null, "Would you like to keep using the same custom settings?", "Keep Custom Settings?", JOptionPane.YES_NO_OPTION);
+				if (Integer.parseInt(saveCustomSettings) == JOptionPane.YES_OPTION) {
+					//save settings to settingsArray
+					customSettingsArrayInt[0] = min1stDigit;
+					customSettingsArrayInt[1] = max1stDigit;
+					customSettingsArrayInt[2] = min2ndDigit;
+					customSettingsArrayInt[3] = max2ndDigit;
+					customSettingsArrayStr[0] = carryBorrow;
+					customSettingsArrayStr[1] = allowRemainders;
+					customSettingsArrayStr[2] = wholeOrDecimal;
+					customSettingsArrayStr[3] = negativeAnswer;
+					customSettingsArrayStr[4] = correctAnswerScoreInput;
+					customSettingsArrayInt[4] = correctAnswerScore;
+					customSettingsArrayStr[5] = wrongAnswerScoreInput;
+					customSettingsArrayInt[6] = wrongAnswerScore;
+				}
+				else { //if saveCustomSettings = no, reset all custom variables
+					//reset all custom setting variables to defaults
+					min1stDigit = 0;
+					max1stDigit = 0;
+					min2ndDigit = 0;
+					max2ndDigit = 0;
+					carryBorrow = "";
+					allowRemainders = "";
+					wholeOrDecimal = "";
+					negativeAnswer = "";
+					correctAnswerScoreInput = "";
+					correctAnswerScore = 0;
+					wrongAnswerScoreInput = "";
+					wrongAnswerScore = 0;
+				}	
+			}
 			}//close if accumulator reset section
 	
 	}//close play/repeat block			
@@ -2027,42 +2121,6 @@ public class BasicMathPracticev2 {
 	//calculate answer for multiplication
 	public static int calculateAnswerMult(int x, int y) {
 		return (x*y);
-	}
-
-	//prompt for minimum & maximum limits for 1st & 2nd digits for custom challenge level (5)
-	public static int maxDigit() {
-		int maxDigit=0;
-		String minMaxInput="";
-		try {
-			minMaxInput = JOptionPane.showInputDialog("Welcome to the Custom Setup\nwhere you name the settings!\n\n"
-			+ "What is the smallest number you want us to choose for the challenges?\n(whole positive numbers only)\n\n\n"
-			+ "The \"first number\" is 3 in the following:\n3+1=4\n3-2=1\n3*2=6\n3/1=1.5\n");
-			maxDigit = Integer.parseInt(minMaxInput);
-		}
-		catch(Exception e) {
-			minMaxInput="";
-			JOptionPane.showMessageDialog(null,"Oops!\n\nRemember:\nOnly enter numbers.\n\nDo not include letters, negatives, decimals, fractions, commas, etc.\n\n"
-					+ "Press OK to try again.", "Oops!",JOptionPane.INFORMATION_MESSAGE);
-		}
-		return maxDigit;
-	}
-		
-	//prompt for minimum limits for 1st & 2nd digits for custom challenge level (5)
-	public static int minDigit() {
-		int minDigit=0;
-		String minMaxInput="";
-		try {
-			minMaxInput = JOptionPane.showInputDialog("Welcome to the Custom Setup\nwhere you name the settings!\n\n"
-			+ "What is the smallest number you want us to choose for the challenges?\n(whole positive numbers only)\n\n\n"
-			+ "The \"first number\" is 3 in the following:\n3+1=4\n3-2=1\n3*2=6\n3/1=1.5\n");
-			minDigit = Integer.parseInt(minMaxInput);
-		}
-		catch(Exception e) {
-			minMaxInput="";
-			JOptionPane.showMessageDialog(null,"Oops!\n\nRemember:\nOnly enter numbers.\n\nDo not include letters, negatives, decimals, fractions, commas, etc.\n\n"
-					+ "Press OK to try again.", "Oops!",JOptionPane.INFORMATION_MESSAGE);
-		}
-		return minDigit;
 	}
 		
 	//choose random number for firstDigit
