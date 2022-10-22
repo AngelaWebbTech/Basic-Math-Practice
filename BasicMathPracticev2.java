@@ -1,22 +1,19 @@
 // 7.1.22 timer starts/stops needs to be added (make this a function that is called in each section if needed)
-//more than 3 rounds, the final output runs off screen. add JScrollPane
 //7.20.22 (fileWriter/printWriter) need to add an option to save the custom level setup
 //7.24.22 timer does not determine points - timer keeps track of time as a measure of speed, points are added same as no-timer method in all levels
-//8.5.22 function (randNumGen1)://challengeLevel 5 not tested for good variety at all
-//8.5.22 function(randNumGen2): //challengeLevel 5 not tested for good variety at all
-//10.19.22 at end of game, question exists to keep custom settings for challengeLevel=5. Need this question for all levels. Also need to add ability to replay the same settings instead of 
-				//reentering mathType and challengeLevel=5
+//10.19.22 at end of game, question exists to keep custom settings for challengeLevel=5. Need this question for all levels. Also need to add ability to replay 
+			//the same settings instead of reentering mathType and challengeLevel=5
 //10.19.22 should customSettings array be permanent? create a user-identified array that they can pull up later? would need an option to erase it.
-//10.19.22 in custom level setup, maximum numbers are allowed to be smaller than the minimum numbers (for digits chosen)
+//10.19.22 in custom level setup, maximum numbers are allowed to be smaller than the minimum numbers (for digits chosen) - add warning that all answers will be negative
 
 //practice basic + - x % math
 
-import javax.swing.JOptionPane; //for UI
 import java.util.Random; //for random number generator
 import java.util.ArrayList; //for storing data for each round
 import java.util.Scanner; //for reading answer inputs for division
 import java.io.FileWriter; //filewriter for high scores file
 import java.io.*; //for FileReader in case(8)
+import javax.swing.*; //for scroll pane
 
 public class BasicMathPracticev2 {
 
@@ -34,7 +31,7 @@ public class BasicMathPracticev2 {
 				wholeNumberAnswer=0, wrongAnswerScore=0;
 		
 		String allowRemainders="", carryBorrow="", challengeLevel, chooseAddorSubStr, chooseAddSubMultDivStr, chooseMultorDivStr, correctAnswerScoreInput="", mathType="", 
-				negativeAnswer="", numOfProblemsInput, playAgain="Y", remainderEntered="", remainderInput, scoreOutput="", userGuessInput="", 
+				negativeAnswer="", numOfProblemsInput="", playAgain="Y", remainderEntered="", remainderInput, scoreOutput="", userGuessInput="", 
 				username, wholeNumbersEntered="", wholeOrDecimal="", wrongAnswerScoreInput="", line, saveCustomSettings, minMaxInput;
 		
 		boolean noBorrowing, noCarrying, noNegatives, noRemainders;
@@ -63,12 +60,12 @@ public class BasicMathPracticev2 {
 											+ "What's your name?");
 		
 		
-//--------------------------------------------------------------------------------------------------------------------------------------
-//------                                            CHOOSE TYPE OF PRACTICE                                          -------------------
-//--------------------------------------------------------------------------------------------------------------------------------------
+		//--------------------------------------------------------------------------------------------------------------------------------------
+		//------                                            CHOOSE TYPE OF PRACTICE                                          -------------------
+		//--------------------------------------------------------------------------------------------------------------------------------------
 			
 	
-	while (playAgain.equalsIgnoreCase("Y") && (!mathType.equalsIgnoreCase("8"))) {
+		while (playAgain.equalsIgnoreCase("Y") && (!mathType.equalsIgnoreCase("8"))) {
 			//prompt for type of practice: addition, subtraction, multiplication, division, add & subtract, mult & divide, or all
 			mathType = JOptionPane.showInputDialog("Hello " + username + "!\n\n"
 														+ "What would you like to do today?\nEnter a number:\n\n"
@@ -102,6 +99,28 @@ public class BasicMathPracticev2 {
 						&& !mathType.equalsIgnoreCase("5") && !mathType.equalsIgnoreCase("6") && !mathType.equalsIgnoreCase("7") && !mathType.equalsIgnoreCase("8"));
 			}
 			
+			//change mathType to understandable variables
+			if (mathType.equals("1"))
+				mathType = "addition";
+			else if (mathType.equals("2"))
+				mathType = "subtraction";
+			else if (mathType.equals("3"))
+				mathType = "multiplication";
+			else if (mathType.equals("4"))
+				mathType = "division";
+			else if (mathType.equals("5"))
+				mathType = "both addition and subtraction";
+			else if (mathType.equals("6"))
+				mathType = "both multiplication and division";
+			else if (mathType.equals("7"))
+				mathType = "all";
+			else if (mathType.equals("8"))
+				mathType = "see high scores";
+//			else if (mathType.equals("9"))
+//				mathType = "exit the game";
+			else 
+				mathType = "";
+				JOptionPane.showMessageDialog(null, "Something has gone wrong with the math type.\nPlease restart the game.", "PROGRAM ERROR", JOptionPane.ERROR_MESSAGE);
 			
 			//-------------------------------------------------------------------------------------------------------------------------------------
 			//------                                               CHOOSE CHALLENGE LEVEL                                   -----------------------
@@ -145,19 +164,60 @@ public class BasicMathPracticev2 {
 						&& !challengeLevel.equalsIgnoreCase("5"));
 			}
 			
+			//change challengeLevel to understandable variables
+			if (challengeLevel.equals("1"))
+				challengeLevel = "beginner";
+			else if (challengeLevel.equals("2"))
+				challengeLevel = "easy";
+			else if (challengeLevel.equals("3"))
+				challengeLevel = "medium";
+			else if (challengeLevel.equals("4"))
+				challengeLevel = "hard";
+			else if (challengeLevel.equals("5"))
+				challengeLevel = "custom";
+			else 
+				challengeLevel = "";
+				JOptionPane.showMessageDialog(null, "Something has gone wrong with setting the challenge level.\nPlease restart the game.", "PROGRAM ERROR", JOptionPane.ERROR_MESSAGE);
+			
 			
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			///////                         Input for Challenge Level 5: Custom                       //////////
 			////////////////////////////////////////////////////////////////////////////////////////////////////
 			
 			
-			if (challengeLevel.equals("5")) {
+			if (challengeLevel.equals("custom")) {
+				
+				//if mathType=1,2,5, or 7: prompt user: do you want to include problems with carrying & borrowing?
+				if (mathType.equals("addition") || mathType.equals("subtraction") || mathType.equals("both addition and subtraction") || mathType.equals("all"))
+					while ((!carryBorrow.equalsIgnoreCase("y")) && (!carryBorrow.equalsIgnoreCase("n"))) {
+						carryBorrow = JOptionPane.showInputDialog("Do you want to include problems that require carrying or borrowing?\n\n(Y)es or (N)o");
+					}
+				
+				//if mathType=4, 6, or 7: prompt user: do you want to include problems with remainders?
+				if (mathType.equals("division") || mathType.equals("both multiplication and division") || mathType.equals("all"))
+					while ((!allowRemainders.equalsIgnoreCase("y")) && (!allowRemainders.equalsIgnoreCase("n"))) {
+						allowRemainders = JOptionPane.showInputDialog("Do you want to include problems with remainders?\n\n(Y)es or (N)o");
+					}
+				
+				//if allowRemainders is yes, should the remainders be expressed in whole numbers or decimals?
+				if (allowRemainders.equalsIgnoreCase("y"))
+					while ((!wholeOrDecimal.equalsIgnoreCase("1")) && (!wholeOrDecimal.equalsIgnoreCase("2"))) {
+						wholeOrDecimal = JOptionPane.showInputDialog("Should the remainders be in terms of:\n1) whole numbers (ex: r2) or\n2)decimals (ex: 1.25)?\n\n"
+								+ "(please choose 1 or 2)");
+					}
+				
+				//if mathType=2, 5, or 7: prompt user: Is it ok if the correct answer is a negative number?
+				if (mathType.equals("subtraction") || mathType.equals("both addition and subtraction") || mathType.equals("all"))
+					while ((!negativeAnswer.equalsIgnoreCase("y")) && (!negativeAnswer.equalsIgnoreCase("n"))) {
+						negativeAnswer= JOptionPane.showInputDialog("Is it ok if the correct answer is a negative number?\n\n(Y)es or (N)o");
+					}
 				
 				//prompt for minimum limits for 1st & 2nd digits for custom challenge level (5)
 				//minimum 1st Digit
 				try {
 					minMaxInput = JOptionPane.showInputDialog("Welcome to the Custom Setup\n\n"
 					+ "What is the smallest first number you want us to choose for the challenges?\n(whole positive numbers only)\n\n"
+					+ "for reference:\n"
 					+ "3 is the \"first number\" in all of the following:\n"
 					+ "3+1=4  3-2=1  3*2=6   3/1.5=2");
 					min1stDigit = Integer.parseInt(minMaxInput);
@@ -172,6 +232,7 @@ public class BasicMathPracticev2 {
 				try {
 					minMaxInput = JOptionPane.showInputDialog("Welcome to the Custom Setup\n\n"
 					+ "What is the largest first number you want us to choose for the challenges?\n(whole positive numbers only)\n\n"
+					+ "for reference:\n"
 					+ "3 is the \"first number\" in all of the following:\n"
 					+ "3+1=4  3-2=1  3*2=6   3/1.5=2");
 					max1stDigit = Integer.parseInt(minMaxInput);
@@ -186,6 +247,7 @@ public class BasicMathPracticev2 {
 				try {
 					minMaxInput = JOptionPane.showInputDialog("Welcome to the Custom Setup\n\n"
 					+ "What is the smallest second number you want us to choose for the challenges?\n(whole positive numbers only)\n\n"
+					+ "for reference:\n"
 					+ "3 is the \"second number\" in all of the following:\n"
 					+ "1+3=4  4-3=1  2*3=6   6/3=2");
 					min2ndDigit = Integer.parseInt(minMaxInput);
@@ -200,6 +262,7 @@ public class BasicMathPracticev2 {
 				try {
 					minMaxInput = JOptionPane.showInputDialog("Welcome to the Custom Setup\n\n"
 					+ "What is the largest second number you want us to choose for the challenges?\n(whole positive numbers only)\n\n"
+					+ "for reference:\n"
 					+ "3 is the \"first number\" in all of the following:\n"
 					+ "1+3=4  4-3=1  2*3=6   6/3=2");
 					max1stDigit = Integer.parseInt(minMaxInput);
@@ -210,44 +273,16 @@ public class BasicMathPracticev2 {
 							+ "Press OK to try again.", "Oops!",JOptionPane.INFORMATION_MESSAGE);
 				}
 					
-				//if mathType=1,2,5, or 7: prompt user: do you want to include problems with carrying & borrowing?
-				if (mathType.equals("1") || mathType.equals("2") || mathType.equals("5") || mathType.equals("7")) {	
-					while ((!carryBorrow.equalsIgnoreCase("y")) && (!carryBorrow.equalsIgnoreCase("n"))) {
-						carryBorrow = JOptionPane.showInputDialog("Do you want to include problems that require carrying or borrowing?\n\n(Y)es or (N)o");
-					}
-				}
-				
-				//if mathType=4, 6, or 7: prompt user: do you want to include problems with remainders?
-				if (mathType.equals("4") || mathType.equals("6") || mathType.equals("7")) {	
-					while ((!allowRemainders.equalsIgnoreCase("y")) && (!allowRemainders.equalsIgnoreCase("n"))) {
-						allowRemainders = JOptionPane.showInputDialog("Do you want to include problems with remainders?\n\n(Y)es or (N)o");
-					}
-				}
-				
-				//if allowRemainders is yes, should the remainders be expressed in whole numbers or decimals?
-				if (allowRemainders.equalsIgnoreCase("y")) {
-					while ((!wholeOrDecimal.equalsIgnoreCase("1")) && (!wholeOrDecimal.equalsIgnoreCase("2"))) {
-						wholeOrDecimal = JOptionPane.showInputDialog("Should the remainders be in terms of:\n1) whole numbers (ex: r2) or\n2)decimals (ex: 1.25)?\n\n"
-								+ "(please choose 1 or 2)");
-					}
-				}
-				
-				//if mathType=2, 5, or 7: prompt user: Is it ok if the correct answer is a negative number?
-				if (mathType.equals("2") || mathType.equals("5") || mathType.equals("7")) {
-					while ((!negativeAnswer.equalsIgnoreCase("y")) && (!negativeAnswer.equalsIgnoreCase("n"))) {
-						negativeAnswer= JOptionPane.showInputDialog("Is it ok if the correct answer is a negative number?\n\n(Y)es or (N)o");
-					}
-				}
-				
 				//prompt user for score value for each correct answer (include option for using the timer)
 				while (correctAnswerScoreInput=="") {
 					try {
-						correctAnswerScoreInput = JOptionPane.showInputDialog("How many points should each correct answer count for?\n\n(whole numbers only)");
+						while (!correctAnswerScoreInput.matches("[0-9]+"))
+							correctAnswerScoreInput = JOptionPane.showInputDialog("How many points should each correct answer count for?\n\n(whole positive numbers only)");
 						correctAnswerScore = Integer.parseInt(correctAnswerScoreInput);
 					}
 					catch(Exception e) {
 						correctAnswerScoreInput="";
-						JOptionPane.showMessageDialog(null,  "Oops!\n\nPlease enter only whole numbers.\n\nPress OK to try again.", "Oops!", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null,  "Oops!\n\nPlease enter only whole positive numbers.\n\nPress OK to try again.", "Oops!", JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
 				
@@ -255,7 +290,8 @@ public class BasicMathPracticev2 {
 				while (wrongAnswerScoreInput=="") {
 					try {
 						wrongAnswerScoreInput = JOptionPane.showInputDialog("Should wrong answers deduct points?\n\n(Y)es or (N)o");
-						if (wrongAnswerScoreInput.equalsIgnoreCase("n")) {wrongAnswerScore=0;}//set wrongAnswerScore to 0 to simplify code if user chooses no
+						if (wrongAnswerScoreInput.equalsIgnoreCase("n")) 
+							wrongAnswerScore=0;//set wrongAnswerScore to 0 to simplify code if user chooses no
 						if ((!wrongAnswerScoreInput.equalsIgnoreCase("Y")) && (!wrongAnswerScoreInput.equalsIgnoreCase("N"))){
 							wrongAnswerScoreInput="";
 							JOptionPane.showMessageDialog(null, "Oops!\n\nPlease choose only Y or N.\n\nPress OK to re-enter.", "Oops", JOptionPane.INFORMATION_MESSAGE);
@@ -320,7 +356,8 @@ public class BasicMathPracticev2 {
 			//------------------------------------------------------------------------------------------------------------------------------------
 			
 			//prompt user for a number of problems (or continuous play)
-			numOfProblemsInput = JOptionPane.showInputDialog("How many problems do you want to practice?");
+			while (!numOfProblemsInput.matches("[0-9]+"))
+				numOfProblemsInput = JOptionPane.showInputDialog("How many problems do you want to practice?");
 			numOfProblems = Integer.parseInt(numOfProblemsInput);
 	
 			
@@ -337,14 +374,14 @@ public class BasicMathPracticev2 {
 			//------                                                       ADDITION                                                -------
 			//---------------------------------------------------------------------------------------------------------------------------------------
 			
-			case ("1"):
+			case ("addition"):
 				for (int x=1;x<=numOfProblems;x++) {
-					if (challengeLevel.equals("1")) {
+					if (challengeLevel.equals("beginner")) {
 						//generate random numbers, single digit
 						firstDigit = randNumGen1(0,10, firstDigit, challengeLevel, mathType);
 						secondDigit=randNumGen2(0,10, secondDigit, challengeLevel, mathType);
 					}
-					else if (challengeLevel.equals("2")) {
+					else if (challengeLevel.equals("easy")) {
 						//generate random numbers 10-89, without carrying when added
 						do {
 							firstDigit = randNumGen1(10,90, firstDigit, challengeLevel, mathType);
@@ -353,12 +390,12 @@ public class BasicMathPracticev2 {
 						}
 						while (noCarrying==false);
 					}
-					else if (challengeLevel.equals("3")) {
+					else if (challengeLevel.equals("medium")) {
 						//generate random numbers 0-99
 						firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 						secondDigit = randNumGen2(0,100,secondDigit, challengeLevel, mathType);
 					}
-					else if (challengeLevel.equals("4")) {
+					else if (challengeLevel.equals("hard")) {
 						//generate random numbers 2-4 digits each
 						firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 						secondDigit = randNumGen2(10,10000,secondDigit, challengeLevel, mathType);
@@ -381,7 +418,7 @@ public class BasicMathPracticev2 {
 					//if answer is correct
 					if (userGuess==correctAnswer) {
 						//points:
-						if (challengeLevel.equals("5")){
+						if (challengeLevel.equals("custom")){
 							//congrats message
 							totalProblems++;
 							totalCorrectAnswers++;
@@ -417,9 +454,9 @@ public class BasicMathPracticev2 {
 			//-----------------------------------------------------------------------------------------------------------------------------------------
 			//------                                                         SUBTRACTION                                                    -----------
 			//------------------------------------------------------------------------------------------------------------------------------------------
-			case ("2"):
+			case ("subtraction"):
 				for (int x=1;x<=numOfProblems;x++) {
-					if (challengeLevel.equals("1")) {
+					if (challengeLevel.equals("beginner")) {
 						//generate random numbers, single digit, no negative answers
 						do {
 							firstDigit = randNumGen1(0,10,firstDigit, challengeLevel, mathType);
@@ -428,7 +465,7 @@ public class BasicMathPracticev2 {
 						}
 						while (noNegatives==false);
 					}
-					else if (challengeLevel.equals("2")) {
+					else if (challengeLevel.equals("easy")) {
 						//generate random numbers 10-89, without borrowing or negatives when added
 						do {
 							firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
@@ -438,7 +475,7 @@ public class BasicMathPracticev2 {
 						}
 						while (noNegatives==false || noBorrowing==false);
 					}
-					else if (challengeLevel.equals("3")) {
+					else if (challengeLevel.equals("medium")) {
 						//generate random numbers 0-99, no negatives, borrowing permitted
 						do {
 							firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
@@ -447,7 +484,7 @@ public class BasicMathPracticev2 {
 						}
 						while (noNegatives==false);
 					}
-					else if (challengeLevel.equals("4")) {
+					else if (challengeLevel.equals("hard")) {
 						//generate random numbers 2-4 digits each, borrowing & negatives permitted
 						firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 						secondDigit = randNumGen2(10,10000,secondDigit, challengeLevel, mathType);
@@ -502,7 +539,7 @@ public class BasicMathPracticev2 {
 					//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
 					//if answer is correct
-					if (challengeLevel.equals("5")){
+					if (challengeLevel.equals("custom")){
 						//congrats message
 						totalProblems++;
 						totalCorrectAnswers++;
@@ -539,26 +576,26 @@ public class BasicMathPracticev2 {
 			//-----------------------------------------------------------------------------------------------------------------------------------------
 			//------                                                 MULTIPLICATION                                                             -------
 			//------------------------------------------------------------------------------------------------------------------------------------------	
-			case ("3"):
+			case ("multiplication"):
 				for (int x=1;x<=numOfProblems;x++) {
-					if (challengeLevel.equals("1")) { //only 1,2,5,10,11
+					if (challengeLevel.equals("beginner")) { //only 1,2,5,10,11
 						//generate random numbers, 1, 2, 5, 10, and 11 sets only
 						while (firstDigit!=1 && firstDigit!=2 && firstDigit!=5 && firstDigit!=10 && firstDigit!=11) {
 							firstDigit = randNumGen1(1,12,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(1,12,secondDigit, challengeLevel, mathType);
 						}
 					}
-					else if (challengeLevel.equals("2")) {//full 1-12 table
+					else if (challengeLevel.equals("easy")) {//full 1-12 table
 						//generate random numbers 1-12
 						firstDigit = randNumGen1(1,13,firstDigit, challengeLevel, mathType);
 						secondDigit = randNumGen2(1,13,secondDigit, challengeLevel, mathType);
 					}
-					else if (challengeLevel.equals("3")) {
+					else if (challengeLevel.equals("medium")) {
 						//generate random numbers 0-99
 						firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 						secondDigit = randNumGen2(0,100,secondDigit, challengeLevel, mathType);
 					}
-					else if (challengeLevel.equals("4")) {
+					else if (challengeLevel.equals("hard")) {
 						//generate random numbers 2-4 digits each
 						firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 						secondDigit = randNumGen2(10,10000,secondDigit, challengeLevel, mathType);
@@ -580,7 +617,7 @@ public class BasicMathPracticev2 {
 					//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
 					//if answer is correct
-					if (challengeLevel.equals("5")){
+					if (challengeLevel.equals("custom")){
 						//congrats message
 						totalProblems++;
 						totalCorrectAnswers++;
@@ -620,9 +657,9 @@ public class BasicMathPracticev2 {
 			//-----------------------------------------------------------------------------------------------------------------------------------------
 			//------                                                 DIVISION                                                                   -------
 			//------------------------------------------------------------------------------------------------------------------------------------------			
-			case ("4"):
+			case ("division"):
 				for (int x=1;x<=numOfProblems;x++) {
-					if (challengeLevel.equals("1")) {//multiplication table, no remainders
+					if (challengeLevel.equals("beginner")) {//multiplication table, no remainders
 						//generate random numbers
 						do {
 							firstDigit = randNumGen1(1,13,firstDigit, challengeLevel, mathType);
@@ -633,7 +670,7 @@ public class BasicMathPracticev2 {
 						}
 						while (noRemainders==false);
 					}
-					else if (challengeLevel.equals("2")) {//:2 digits divided by 1 digit, no remainders
+					else if (challengeLevel.equals("easy")) {//:2 digits divided by 1 digit, no remainders
 						//generate random numbers
 						do {
 							firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
@@ -644,14 +681,14 @@ public class BasicMathPracticev2 {
 						}
 						while (noRemainders==false);
 					}
-					else if (challengeLevel.equals("3")) {//2-3 digits divided by 1-2 digits, with remainders (written as whole numbers)
+					else if (challengeLevel.equals("medium")) {//2-3 digits divided by 1-2 digits, with remainders (written as whole numbers)
 						//generate random numbers
 							firstDigit = randNumGen1(10,1000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(1,100,secondDigit, challengeLevel, mathType);
 							firstDigitDbl = Double.valueOf(firstDigit);
 							secondDigitDbl = Double.valueOf(secondDigit);
 					}
-					else if (challengeLevel.equals("4")) {//1-4 digits for each number, with remainders (written as decimals)
+					else if (challengeLevel.equals("hard")) {//1-4 digits for each number, with remainders (written as decimals)
 						//generate random numbers 1-4 digits each
 						do { 
 							firstDigit = randNumGen1(1,10000,firstDigit, challengeLevel, mathType);
@@ -777,10 +814,8 @@ public class BasicMathPracticev2 {
 					}
 					//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
-					//if challenge level = 5 **********************************************************************************************************INCOMPLETE SECTION
-					
-					
-					if (challengeLevel.equals("5")){
+					//if challenge level = 5
+					if (challengeLevel.equals("custom")){
 
 						//correct with no remainders or decimal remainders
 						if (userGuessDbl==correctAnswerDbl && (allowRemainders.equalsIgnoreCase("n")||wholeOrDecimal.equals("2"))) {
@@ -803,24 +838,21 @@ public class BasicMathPracticev2 {
 						
 						//wrong with no remainders or decimal remainders
 						totalProblems++;
-						if  (allowRemainders.equalsIgnoreCase("n")||wholeOrDecimal.equals("2")) {
+						if  (allowRemainders.equalsIgnoreCase("n")||wholeOrDecimal.equals("2"))
 							JOptionPane.showMessageDialog(null, "Good try, but that is incorrect.\n\n" 
 								+ firstDigit + " / " + secondDigit + " = " + correctAnswerDbl + "\n\n"
 								+ "\n\nTotal points: " + pointTotal, "Incorrect", JOptionPane.INFORMATION_MESSAGE);
-						}
 						
 						//wrong with whole number remainders
-						else {
+						else
 							JOptionPane.showMessageDialog(null, "Good try, but that is incorrect.\n\n" 
 									+ firstDigit + " / " + secondDigit + " = " + wholeNumbersEntered + " R" + remainderEntered + "\n\n"
 									+ "\n\nTotal points: " + pointTotal, "Incorrect", JOptionPane.INFORMATION_MESSAGE);	
-						}
 					}//close if challengeLevel=5 block
 					
 					//if challenge level != 5
-					else {
+					else {  
 						//correct answer
-						
 						//correct with no remainders or with decimal remainders
 						if (userGuessDbl==correctAnswerDbl && (allowRemainders.equalsIgnoreCase("n")||wholeOrDecimal.equals("2"))) {	
 							//congrats message
@@ -846,18 +878,16 @@ public class BasicMathPracticev2 {
 							
 							//with no remainders or with decimal remainders
 							totalProblems++;
-							if  (allowRemainders.equalsIgnoreCase("n")||wholeOrDecimal.equals("2")) {
+							if  (allowRemainders.equalsIgnoreCase("n")||wholeOrDecimal.equals("2"))
 								JOptionPane.showMessageDialog(null, "Good try, but that is incorrect.\n\n" 
 									+ firstDigit + " / " + secondDigit + " = " + correctAnswerDbl + "\n\n"
 									+ "\n\nTotal points: " + pointTotal, "Incorrect", JOptionPane.INFORMATION_MESSAGE);
-							}
 							
 							//with whole number remainders
-							else {
+							else
 								JOptionPane.showMessageDialog(null, "Good try, but that is incorrect.\n\n" 
 									+ firstDigit + " / " + secondDigit + " = " + wholeNumbersEntered + " R" + remainderEntered + "\n\n"
 									+ "\n\nTotal points: " + totalCorrectAnswers, "Incorrect", JOptionPane.INFORMATION_MESSAGE);
-							}
 						} //close bracket for (if userguess does not equal correctAnswer) block
 					}//close if challengeLevel!=5 block
 				}//close division gameplay for loop
@@ -870,7 +900,9 @@ public class BasicMathPracticev2 {
 			//-----------------------------------------------------------------------------------------------------------------------------------------
 			//------                                        ADDITION & SUBTRACTION                                                             -------
 			//------------------------------------------------------------------------------------------------------------------------------------------			
-			case ("5"):
+			
+			
+			case ("both addition and subtraction"):
 			
 				for (int x=1;x<=numOfProblems;x++) {
 					//choose whether to do addition or subtraction (random number generator 1=add or 2=sub)
@@ -879,12 +911,12 @@ public class BasicMathPracticev2 {
 					
 					if (chooseAddorSub==1) {
 						//generate random digits to use
-						if (challengeLevel.equals("1")) {
+						if (challengeLevel.equals("beginner")) {
 							//generate random numbers, single digit
 							firstDigit = randNumGen1(0,10,firstDigit, challengeLevel, mathType);
 							secondDigit=randNumGen2(0,10,secondDigit, challengeLevel, mathType);
 						}
-						else if (challengeLevel.equals("2")) {
+						else if (challengeLevel.equals("easy")) {
 							//generate random numbers 10-89, without carrying when added
 							do {
 								firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
@@ -893,12 +925,12 @@ public class BasicMathPracticev2 {
 							}
 							while (noCarrying==false);
 						}
-						else if (challengeLevel.equals("3")) {
+						else if (challengeLevel.equals("medium")) {
 							//generate random numbers 0-99
 							firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(0,100,secondDigit, challengeLevel, mathType);
 						}
-						else if (challengeLevel.equals("4")) {
+						else if (challengeLevel.equals("hard")) {
 							//generate random numbers 2-4 digits each
 							firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(10,10000,secondDigit, challengeLevel, mathType);
@@ -919,7 +951,7 @@ public class BasicMathPracticev2 {
 						//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
 						//if answer is correct
-						if (challengeLevel.equals("5")){
+						if (challengeLevel.equals("custom")){
 							//congrats message
 							totalProblems++;
 							totalCorrectAnswers++;
@@ -952,7 +984,7 @@ public class BasicMathPracticev2 {
 					
 					//if chooseAdorSub is 2 (subtraction)
 					else if (chooseAddorSub==2){
-						if (challengeLevel.equals("1")) {
+						if (challengeLevel.equals("beginner")) {
 							//generate random numbers, single digit, no negative answers
 							do {
 								firstDigit = randNumGen1(0,10,firstDigit, challengeLevel, mathType);
@@ -961,7 +993,7 @@ public class BasicMathPracticev2 {
 							}
 							while (noNegatives==false);
 						}
-						else if (challengeLevel.equals("2")) {
+						else if (challengeLevel.equals("easy")) {
 							//generate random numbers 10-89, without borrowing or negatives when added
 							do {
 								firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
@@ -971,7 +1003,7 @@ public class BasicMathPracticev2 {
 							}
 							while (noNegatives==false || noBorrowing==false);
 						}
-						else if (challengeLevel.equals("3")) {
+						else if (challengeLevel.equals("medium")) {
 							//generate random numbers 0-99, no negatives, borrowing permitted
 							do {
 								firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
@@ -980,7 +1012,7 @@ public class BasicMathPracticev2 {
 							}
 							while (noNegatives==false);
 						}
-						else if (challengeLevel.equals("4")) {
+						else if (challengeLevel.equals("hard")) {
 							//generate random numbers 2-4 digits each, borrowing & negatives permitted
 							firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(10,10000,secondDigit, challengeLevel, mathType);
@@ -1034,7 +1066,7 @@ public class BasicMathPracticev2 {
 					//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
 					//if answer is correct
-					if (challengeLevel.equals("5")){
+					if (challengeLevel.equals("custom")){
 						//congrats message
 						totalProblems++;
 						totalCorrectAnswers++;
@@ -1075,7 +1107,9 @@ public class BasicMathPracticev2 {
 			//-----------------------------------------------------------------------------------------------------------------------------------------
 			//------                                        MULTIPLICATION & DIVISION                                                           -------
 			//------------------------------------------------------------------------------------------------------------------------------------------			
-			case("6"):
+
+			
+			case("both multiplication and division"):
 				
 				for (int x=1;x<=numOfProblems;x++) {
 					//choose whether to do multiplication or division (random number generator 1=add or 2=sub)
@@ -1084,26 +1118,26 @@ public class BasicMathPracticev2 {
 					chooseMultorDivStr = Integer.toString(chooseMultorDiv);
 					
 					if (chooseMultorDiv==1) {
-						mathType.equals("3"); //reassigned to allow randNumGen1/randNumGen2 functions to work
+						mathType.equals("multiplication"); //reassigned to allow randNumGen1/randNumGen2 functions to work
 						//generate random digits to use
-						if (challengeLevel.equals("1")) { //only 1,2,5,10,11
+						if (challengeLevel.equals("beginner")) { //only 1,2,5,10,11
 							//generate random numbers, 1, 2, 5, 10, and 11 sets only
 							while (firstDigit!=1 && firstDigit!=2 && firstDigit!=5 && firstDigit!=10 && firstDigit!=11) {
 								firstDigit = randNumGen1(1,12,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(1,12,secondDigit, challengeLevel, mathType);
 							}
 						}
-						else if (challengeLevel.equals("2")) {//full 1-12 table
+						else if (challengeLevel.equals("easy")) {//full 1-12 table
 							//generate random numbers 1-12
 							firstDigit = randNumGen1(1,13,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(1,13,secondDigit, challengeLevel, mathType);
 						}
-						else if (challengeLevel.equals("3")) {
+						else if (challengeLevel.equals("medium")) {
 							//generate random numbers 0-99
 							firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(0,100,secondDigit, challengeLevel, mathType);
 						}
-						else if (challengeLevel.equals("4")) {
+						else if (challengeLevel.equals("hard")) {
 							//generate random numbers 2-4 digits each
 							firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(10,10000,secondDigit, challengeLevel, mathType);
@@ -1125,7 +1159,7 @@ public class BasicMathPracticev2 {
 						//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
 						//if answer is correct
-						if (challengeLevel.equals("5")){
+						if (challengeLevel.equals("custom")){
 							//congrats message
 							totalProblems++;
 							totalCorrectAnswers++;
@@ -1167,7 +1201,7 @@ public class BasicMathPracticev2 {
 						//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
 						//if answer is correct
-						if (challengeLevel.equals("5")){
+						if (challengeLevel.equals("custom")){
 							//congrats message
 							totalProblems++;
 							totalCorrectAnswers++;
@@ -1200,9 +1234,9 @@ public class BasicMathPracticev2 {
 					
 					//if division is chosen
 					if (chooseMultorDiv==2) {
-						mathType.equals("4"); //reassigned to allow randNumGen1/randNumGen2 functions to work
+						mathType.equals("division"); //reassigned to allow randNumGen1/randNumGen2 functions to work
 						//generate random digits to use
-						if (challengeLevel.equals("1")) {//multiplication table, no remainders
+						if (challengeLevel.equals("beginner")) {//multiplication table, no remainders
 							//generate random numbers
 							do {
 								firstDigit = randNumGen1(1,13,firstDigit, challengeLevel, mathType);
@@ -1213,7 +1247,7 @@ public class BasicMathPracticev2 {
 							}
 							while (noRemainders==false);
 						}
-						else if (challengeLevel.equals("2")) {//:2 digits divided by 1 digit, no remainders
+						else if (challengeLevel.equals("easy")) {//:2 digits divided by 1 digit, no remainders
 							//generate random numbers
 							do {
 								firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
@@ -1224,14 +1258,14 @@ public class BasicMathPracticev2 {
 							}
 							while (noRemainders==false);
 						}
-						else if (challengeLevel.equals("3")) {//2-3 digits divided by 1-2 digits, with remainders (written as whole numbers)
+						else if (challengeLevel.equals("medium")) {//2-3 digits divided by 1-2 digits, with remainders (written as whole numbers)
 							//generate random numbers
 								firstDigit = randNumGen1(10,1000,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(1,100,secondDigit, challengeLevel, mathType);
 								firstDigitDbl = Double.valueOf(firstDigit);
 								secondDigitDbl = Double.valueOf(secondDigit);
 						}
-						else if (challengeLevel.equals("4")) {//1-4 digits for each number, with remainders (written as decimals)
+						else if (challengeLevel.equals("hard")) {//1-4 digits for each number, with remainders (written as decimals)
 							//generate random numbers 1-4 digits each
 							//set up a do/while to filter out answers that are less than .1*****************************************************INCOMPLETE SECTION
 							//do { 
@@ -1280,7 +1314,7 @@ public class BasicMathPracticev2 {
 						//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
 						//if answer is correct
-						if (challengeLevel.equals("5")){
+						if (challengeLevel.equals("custom")){
 							//congrats message
 							totalProblems++;
 							totalCorrectAnswers++;
@@ -1323,7 +1357,7 @@ public class BasicMathPracticev2 {
 						//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
 						//if answer is correct
-						if (challengeLevel.equals("5")){
+						if (challengeLevel.equals("custom")){
 							//congrats message
 							totalProblems++;
 							totalCorrectAnswers++;
@@ -1363,7 +1397,9 @@ public class BasicMathPracticev2 {
 			//-----------------------------------------------------------------------------------------------------------------------------------------
 			//------                                                 ALL                                                                        -------
 			//------------------------------------------------------------------------------------------------------------------------------------------			
-			case("7"):
+
+			
+			case("all"):
 			//use a number generator to choose whether to do add, sub, mult, or div
 				for (int x=1;x<=numOfProblems;x++) {
 					//choose whether to do addition or subtraction (random number generator 1=add or 2=sub)
@@ -1372,14 +1408,14 @@ public class BasicMathPracticev2 {
 					chooseAddSubMultDivStr = Integer.toString(chooseAddSubMultDiv);
 					
 					if (chooseAddSubMultDiv==1) {
-						mathType.equals("1"); //changed to allow randNumGen1,randNumGen2 functions to work
+						mathType.equals("addition"); //changed to allow randNumGen1,randNumGen2 functions to work
 						//generate random digits to use
-						if (challengeLevel.equals("1")) {
+						if (challengeLevel.equals("beginner")) {
 							//generate random numbers, single digit
 							firstDigit = randNumGen1(0,10,firstDigit, challengeLevel, mathType);
 							secondDigit=randNumGen2(0,10,secondDigit, challengeLevel, mathType);
 						}
-						else if (challengeLevel.equals("2")) {
+						else if (challengeLevel.equals("easy")) {
 							//generate random numbers 10-89, without carrying when added
 							do {
 								firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
@@ -1388,12 +1424,12 @@ public class BasicMathPracticev2 {
 							}
 							while (noCarrying==false);
 						}
-						else if (challengeLevel.equals("3")) {
+						else if (challengeLevel.equals("medium")) {
 							//generate random numbers 0-99
 							firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(0,100,secondDigit, challengeLevel, mathType);
 						}
-						else if (challengeLevel.equals("4")) {
+						else if (challengeLevel.equals("hard")) {
 							//generate random numbers 2-4 digits each
 							firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(10,10000,secondDigit, challengeLevel, mathType);
@@ -1414,7 +1450,7 @@ public class BasicMathPracticev2 {
 						//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
 						//if answer is correct
-						if (challengeLevel.equals("5")){
+						if (challengeLevel.equals("custom")){
 							//congrats message
 							totalProblems++;
 							totalCorrectAnswers++;
@@ -1447,8 +1483,8 @@ public class BasicMathPracticev2 {
 					
 					//if chooseAdorSub is 2 (subtraction)
 					else if (chooseAddSubMultDiv==2){
-						mathType.equals("2");  //changed to allow randNumGen1,randNumGen2 functions to work
-						if (challengeLevel.equals("1")) {
+						mathType.equals("subtraction");  //changed to allow randNumGen1,randNumGen2 functions to work
+						if (challengeLevel.equals("beginner")) {
 							//generate random numbers, single digit, no negative answers
 							do {
 								firstDigit = randNumGen1(0,10,firstDigit, challengeLevel, mathType);
@@ -1457,7 +1493,7 @@ public class BasicMathPracticev2 {
 							}
 							while (noNegatives==false);
 						}
-						else if (challengeLevel.equals("2")) {
+						else if (challengeLevel.equals("easy")) {
 							//generate random numbers 10-89, without borrowing or negatives when added
 							do {
 								firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
@@ -1467,7 +1503,7 @@ public class BasicMathPracticev2 {
 							}
 							while (noNegatives==false || noBorrowing==false);
 						}
-						else if (challengeLevel.equals("3")) {
+						else if (challengeLevel.equals("medium")) {
 							//generate random numbers 0-99, no negatives, borrowing permitted
 							do {
 								firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
@@ -1476,7 +1512,7 @@ public class BasicMathPracticev2 {
 							}
 							while (noNegatives==false);
 						}
-						else if (challengeLevel.equals("4")) {
+						else if (challengeLevel.equals("hard")) {
 							//generate random numbers 2-4 digits each, borrowing & negatives permitted
 							firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(10,10000,secondDigit, challengeLevel, mathType);
@@ -1530,7 +1566,7 @@ public class BasicMathPracticev2 {
 					//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
 					//if answer is correct
-					if (challengeLevel.equals("5")){
+					if (challengeLevel.equals("custom")){
 						//congrats message
 						totalProblems++;
 						totalCorrectAnswers++;
@@ -1563,26 +1599,25 @@ public class BasicMathPracticev2 {
 					
 					//if multiplication is chosen
 					if (chooseAddSubMultDiv==3) {
-						mathType.equals("3");  //changed to allow randNumGen1,randNumGen2 functions to work
+						mathType.equals("multiplication");  //changed to allow randNumGen1,randNumGen2 functions to work
 						//generate random digits to use
-						if (challengeLevel.equals("1")) { //only 1,2,5,10,11
+						if (challengeLevel.equals("beginner")) //only 1,2,5,10,11
 							//generate random numbers, 1, 2, 5, 10, and 11 sets only
 							while (firstDigit!=1 && firstDigit!=2 && firstDigit!=5 && firstDigit!=10 && firstDigit!=11) {
 								firstDigit = randNumGen1(1,12,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(1,12,secondDigit, challengeLevel, mathType);
 							}
-						}
-						else if (challengeLevel.equals("2")) {//full 1-12 table
+						else if (challengeLevel.equals("easy")) {//full 1-12 table
 							//generate random numbers 1-12
 							firstDigit = randNumGen1(1,13,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(1,13,secondDigit, challengeLevel, mathType);
 						}
-						else if (challengeLevel.equals("3")) {
+						else if (challengeLevel.equals("medium")) {
 							//generate random numbers 0-99
 							firstDigit = randNumGen1(0,100,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(0,100,secondDigit, challengeLevel, mathType);
 						}
-						else if (challengeLevel.equals("4")) {
+						else if (challengeLevel.equals("hard")) {
 							//generate random numbers 2-4 digits each
 							firstDigit = randNumGen1(10,10000,firstDigit, challengeLevel, mathType);
 							secondDigit = randNumGen2(10,10000,secondDigit, challengeLevel, mathType);
@@ -1604,7 +1639,7 @@ public class BasicMathPracticev2 {
 						//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
 						//if answer is correct
-						if (challengeLevel.equals("5")){
+						if (challengeLevel.equals("custom")){
 							//congrats message
 							totalProblems++;
 							totalCorrectAnswers++;
@@ -1646,7 +1681,7 @@ public class BasicMathPracticev2 {
 						//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
 						//if answer is correct
-						if (challengeLevel.equals("5")){
+						if (challengeLevel.equals("custom")){
 							//congrats message
 							totalProblems++;
 							totalCorrectAnswers++;
@@ -1680,9 +1715,9 @@ public class BasicMathPracticev2 {
 					
 					//if division is chosen
 					if (chooseAddSubMultDiv==4) {
-						mathType.equals("4");  //changed to allow randNumGen1,randNumGen2 functions to work
+						mathType.equals("division");  //changed to allow randNumGen1,randNumGen2 functions to work
 						//generate random digits to use
-						if (challengeLevel.equals("1")) {//multiplication table, no remainders
+						if (challengeLevel.equals("beginner")) {//multiplication table, no remainders
 							//generate random numbers
 							do {
 								firstDigit = randNumGen1(1,13,firstDigit, challengeLevel, mathType);
@@ -1693,7 +1728,7 @@ public class BasicMathPracticev2 {
 							}
 							while (noRemainders==false);
 						}
-						else if (challengeLevel.equals("2")) {//:2 digits divided by 1 digit, no remainders
+						else if (challengeLevel.equals("easy")) {//:2 digits divided by 1 digit, no remainders
 							//generate random numbers
 							do {
 								firstDigit = randNumGen1(10,90,firstDigit, challengeLevel, mathType);
@@ -1704,14 +1739,14 @@ public class BasicMathPracticev2 {
 							}
 							while (noRemainders==false);
 						}
-						else if (challengeLevel.equals("3")) {//2-3 digits divided by 1-2 digits, with remainders (written as whole numbers)
+						else if (challengeLevel.equals("medium")) {//2-3 digits divided by 1-2 digits, with remainders (written as whole numbers)
 							//generate random numbers
 								firstDigit = randNumGen1(10,1000,firstDigit, challengeLevel, mathType);
 								secondDigit = randNumGen2(1,100,secondDigit, challengeLevel, mathType);
 								firstDigitDbl = Double.valueOf(firstDigit);
 								secondDigitDbl = Double.valueOf(secondDigit);
 						}
-						else if (challengeLevel.equals("4")) {//1-4 digits for each number, with remainders (written as decimals)
+						else if (challengeLevel.equals("hard")) {//1-4 digits for each number, with remainders (written as decimals)
 							//generate random numbers 1-4 digits each
 							//set up a do/while to filter out answers that are less than .1*****************************************************INCOMPLETE SECTION
 							//do { 
@@ -1760,7 +1795,7 @@ public class BasicMathPracticev2 {
 						//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
 						//if answer is correct
-						if (challengeLevel.equals("5")){
+						if (challengeLevel.equals("custom")){
 							//congrats message
 							totalProblems++;
 							totalCorrectAnswers++;
@@ -1770,23 +1805,23 @@ public class BasicMathPracticev2 {
 						}//close if challengeLevel=5 block
 						
 						else {	//challengeLevel!=5
-								if (userGuess==correctAnswer) {
-									//congrats message
-									totalProblems++;
-									totalCorrectAnswers++;
-									pointTotal++;
-									JOptionPane.showMessageDialog(null, "Yes!\nThat is correct.\n" + firstDigit + "/" + secondDigit + "=" + correctAnswer + "\n\n"
-											+ "Total points: " + totalCorrectAnswers, "Correct!", JOptionPane.INFORMATION_MESSAGE);
-								}//close if answer is correct section	
-							
-								//if answer is wrong
-								if (userGuess!=correctAnswer) {
-									//show correct answer with a good try message
-									totalProblems++;
-									JOptionPane.showMessageDialog(null, "Good try, but that is incorrect.\n\n" 
-										+ firstDigit + " / " + secondDigit + " = " + correctAnswer + "\n\n"
-										+ "\n\nTotal points: " + totalCorrectAnswers, "Incorrect", JOptionPane.INFORMATION_MESSAGE);
-								} //close bracket for (if userguess does not equal correctAnswer) blockf
+							if (userGuess==correctAnswer) {
+								//congrats message
+								totalProblems++;
+								totalCorrectAnswers++;
+								pointTotal++;
+								JOptionPane.showMessageDialog(null, "Yes!\nThat is correct.\n" + firstDigit + "/" + secondDigit + "=" + correctAnswer + "\n\n"
+										+ "Total points: " + totalCorrectAnswers, "Correct!", JOptionPane.INFORMATION_MESSAGE);
+							}//close if answer is correct section	
+						
+							//if answer is wrong
+							if (userGuess!=correctAnswer) {
+								//show correct answer with a good try message
+								totalProblems++;
+								JOptionPane.showMessageDialog(null, "Good try, but that is incorrect.\n\n" 
+									+ firstDigit + " / " + secondDigit + " = " + correctAnswer + "\n\n"
+									+ "\n\nTotal points: " + totalCorrectAnswers, "Incorrect", JOptionPane.INFORMATION_MESSAGE);
+							} //close bracket for (if userguess does not equal correctAnswer) blockf
 						}//close challengeLevel!=5 section
 						
 						//reset firstDigit to allow for another random number to be generated
@@ -1803,7 +1838,7 @@ public class BasicMathPracticev2 {
 						//*****STOP TIMER HERE*************************************************************************************************************INCOMPLETE SECTION
 					
 						//if answer is correct
-						if (challengeLevel.equals("5")){
+						if (challengeLevel.equals("custom")){
 							//congrats message
 							totalProblems++;
 							totalCorrectAnswers++;
@@ -1823,7 +1858,7 @@ public class BasicMathPracticev2 {
 							}//close if answer is correct section	
 						
 							//if answer is wrong
-							if (userGuessDbl!=correctAnswerDbl) {
+							else /*(userGuessDbl!=correctAnswerDbl)*/ {
 								//show correct answer with a good try message
 								totalProblems++;
 								JOptionPane.showMessageDialog(null, "Good try, but that is incorrect.\n\n" 
@@ -1837,9 +1872,15 @@ public class BasicMathPracticev2 {
 			
 			//break
 			break;
+
 			
+			//-----------------------------------------------------------------------------------------------------------------------------------------
+			//------                                      SEE HIGH SCORES                                                                       -------
+			//------------------------------------------------------------------------------------------------------------------------------------------			
+
+						
 			//see high scores
-			case("8"):
+			case("see high scores"):
 				//show high scores file
 				JOptionPane.showMessageDialog(null, "This option has not been set up yet.", "Coming soon", JOptionPane.WARNING_MESSAGE);
 				
@@ -1861,13 +1902,13 @@ public class BasicMathPracticev2 {
 			break;
 	
 		}//close switch-case for gameplay
-			
-			
-	//-------------------------------------------------------------------------------------------------------------------------------------------------------
-	//-------------                                               DISPLAY SCORE & OFFER REPLAY                                               ----------------
-	//-------------------------------------------------------------------------------------------------------------------------------------------------------
-			
-	
+				
+				
+		//-------------------------------------------------------------------------------------------------------------------------------------------------------
+		//-------------                                               DISPLAY SCORE & OFFER REPLAY                                               ----------------
+		//-------------------------------------------------------------------------------------------------------------------------------------------------------
+				
+		
 		//------------------------------------------------------------------------
 		//------                  DISPLAY SCORE                              -----
 		//------------------------------------------------------------------------
@@ -1883,18 +1924,14 @@ public class BasicMathPracticev2 {
 		catch (Exception e){JOptionPane.showMessageDialog(null, "Something went wrong.", "uh oh", JOptionPane.ERROR_MESSAGE);}
 		
 		//display final scores
-		if (finalScore==1) {
+		if (finalScore==1) 
 			JOptionPane.showMessageDialog(null, "PERFECT SCORE!\n\n You answered all " + totalCorrectAnswers + " problems correctly!");
-		}
-		else if (finalScore>=0.9 && finalScore<1) {	
+		else if (finalScore>=0.9 && finalScore<1)
 			JOptionPane.showMessageDialog(null,"That was amazing!\n\nYou answered " + totalCorrectAnswers + " out of " + totalProblems + " problems correctly!");
-		}
-		else if (finalScore>0.5 && finalScore<0.9) {
+		else if (finalScore>0.5 && finalScore<0.9)
 			JOptionPane.showMessageDialog(null, "Good job!\n\nYou answered " + totalCorrectAnswers + " out of " + totalProblems + " problems correctly!");
-		}
-		else {
+		else
 		JOptionPane.showMessageDialog(null, "Good try.\n\nYou answered " + totalCorrectAnswers + " out of " + totalProblems + " problems correctly!");
-		} 
 		
 		
 			
@@ -1904,25 +1941,21 @@ public class BasicMathPracticev2 {
 		
 		//add a way to play again
 		do {
-			
 			//prompt for play again? y/n
 			playAgain = JOptionPane.showInputDialog("Do you want to play again?\n\n(Y)es or (N)o");
 			//if invalid input is entered, display error message
-			if ((!playAgain.equalsIgnoreCase("y")) && (!playAgain.equalsIgnoreCase("n"))) {
+			if ((!playAgain.equalsIgnoreCase("y")) && (!playAgain.equalsIgnoreCase("n")))
 				JOptionPane.showMessageDialog(null, "Oops! Please enter a number.\n\nPress OK to return to the \"Play Again?\" menu", "Oops", 
 						JOptionPane.INFORMATION_MESSAGE);
-			}
 		}
-		
-//why is this section here?*********************************************************************************************************************************CHECK ON THIS
 		while ((!playAgain.equalsIgnoreCase("y")) && (!playAgain.equalsIgnoreCase("n")));
-			//store scores from current round in score array
-			scoreRecord.add(pointTotal);
-			scoreRecord.add(totalCorrectAnswers);
-			scoreRecord.add(totalProblems);
-			int finalScoreInt = (int)(finalScore*100);
-			scoreRecord.add(finalScoreInt);
 			
+		//store scores from current round in score array
+		scoreRecord.add(pointTotal);
+		scoreRecord.add(totalCorrectAnswers);
+		scoreRecord.add(totalProblems);
+		int finalScoreInt = (int)(finalScore*100);
+		scoreRecord.add(finalScoreInt);	
 		
 		if (playAgain.equalsIgnoreCase("Y")){
 			//accumulate number of rounds
@@ -1930,19 +1963,20 @@ public class BasicMathPracticev2 {
 			
 			//reset all accumulators
 			JOptionPane.showMessageDialog(null, scoreRecord.get(0));
-				//reset all accumulators except roundCount
-				finalScore=0;
-				numOfProblems=0;
-				firstDigit=0;
-				secondDigit=0;
-				userGuess=0;
-				userGuessDbl=0;
-				pointTotal=0;
-				totalProblems=0;
-				totalCorrectAnswers=0;
+	
+			//reset all accumulators except roundCount
+			finalScore=0;
+			numOfProblems=0;
+			firstDigit=0;
+			secondDigit=0;
+			userGuess=0;
+			userGuessDbl=0;
+			pointTotal=0;
+			totalProblems=0;
+			totalCorrectAnswers=0;
 				
 			// if challengeLevel = 5, prompt for re-using same custom settings again
-			if (challengeLevel.equals("5")) {
+			if (challengeLevel.equals("custom")) {
 				saveCustomSettings = JOptionPane.showInputDialog(null, "Would you like to keep using the same custom settings?", "Keep Custom Settings?", JOptionPane.YES_NO_OPTION);
 				if (Integer.parseInt(saveCustomSettings) == JOptionPane.YES_OPTION) {
 					//save settings to settingsArray
@@ -1976,35 +2010,48 @@ public class BasicMathPracticev2 {
 				}	
 			}
 			}//close if accumulator reset section
+		}//close play/repeat block			
 	
-	}//close play/repeat block			
-
-	//show scoreRecord data
-	scoreOutputCounter=0;
-	do{
-		
-		scoreOutput = scoreOutput
-			+ "\n\nRound " + (roundNumDisplayCounter) + ": " 
-			+ "\n\tCorrect Answers: " + scoreRecord.get(scoreOutputCounter+1) 
-			+ "\n\tTotal Problems: " + scoreRecord.get(scoreOutputCounter+2)
-			+ "\n\tTotal Points: " + scoreRecord.get(scoreOutputCounter)
-			+ "\n\tAccuracy: " + scoreRecord.get(scoreOutputCounter+3) + "%";
-		overallScore += scoreRecord.get(scoreOutputCounter);
-		scoreOutputCounter+=4;
-		roundNumDisplayCounter++;
-	}
-	while (scoreOutputCounter<((roundCount*4)-1));
+		//show scoreRecord data
+		scoreOutputCounter=0;
 	
-	JOptionPane.showMessageDialog(null, "Good game today!\n\nYour scores:" + scoreOutput
-			+ "\n\nOverall Point Total: " + overallScore);
+		do{
+			scoreOutput = scoreOutput
+				+ "\n\nRound " + (roundNumDisplayCounter) + ": " 
+				+ "\n\tCorrect Answers: " + scoreRecord.get(scoreOutputCounter+1) 
+				+ "\n\tTotal Problems: " + scoreRecord.get(scoreOutputCounter+2)
+				+ "\n\tTotal Points: " + scoreRecord.get(scoreOutputCounter)
+				+ "\n\tAccuracy: " + scoreRecord.get(scoreOutputCounter+3) + "%";
+			overallScore += scoreRecord.get(scoreOutputCounter);
+			scoreOutputCounter+=4;
+			roundNumDisplayCounter++;
+		}
+		while (scoreOutputCounter<((roundCount*4)-1));
+	
+		//set message to be displayed
+	  	String finalUserData = "Your Final Scores:\n\n" + scoreOutput;
+	
+	  	//create a JTextArea to hold the message
+	  	JTextArea textArea = new JTextArea(25, 40); //(height, width)
+	  	textArea.setText(finalUserData);
+	  	textArea.setEditable(false);
+	  	
+	  	//wrap a scrollpane around the textArea
+	  	JScrollPane scrollPane = new JScrollPane(textArea);
+	  	//scrollPane.setSize(25, 50);
+	  	scrollPane.createVerticalScrollBar();
+	  	scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+	
+	  	//display scrollPane (with text area inside it) in a message dialog
+	  	JOptionPane.showMessageDialog(null, scrollPane);
+		  	
+	  	//add a high score file for each level, and for overall (based on percentage of questions answered correctly)
 
-//add a high score file for each level, and for overall (based on percentage of questions answered correctly)
-
-}//close main
+	}//close main
 	
 
-	//--------------------------------------------------------------------------------------------------------------------------------------
-	//------                                                      FUNCTIONS                                                -------
+	//---------------------------------------------------------------------------------------------------------------------------------------
+	//------                                                      FUNCTIONS                                                           -------
 	//---------------------------------------------------------------------------------------------------------------------------------------
 	
 	//prompt for answer input
@@ -2252,8 +2299,9 @@ public class BasicMathPracticev2 {
 	}
 	
 	//verify subtraction problems have no borrowing needed
-		public static boolean verifyNoBorrowing(int x, int y) {
-			//going right to left, check if s-y<0 for any of them - if it is, return a z=false
+	//************************************************************************************************************************THIS DOES NOT WORK TO VERIFY THAT THERE IS NO BORROWING
+	public static boolean verifyNoBorrowing(int x, int y) {
+			//going right to left, check if x-y<0 for any of them - if it is, return a z=false
 	        boolean z=true;
 	        String stringFirstDigit = Integer.toString(x); //firstDigit to string
 			int num1 = Integer.parseInt(stringFirstDigit);
@@ -2299,6 +2347,5 @@ public class BasicMathPracticev2 {
 		double test = x%y;
 		if (test!=0) {z=false;}
 		return z;
-	}
-	
+	}	
 }//close class
