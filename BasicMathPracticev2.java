@@ -1,20 +1,28 @@
-// 7.1.22 timer starts/stops needs to be added (make this a function that is called in each section if needed)
-//7.20.22 (fileWriter/printWriter) need to add an option to save the custom level setup
-//7.24.22 timer does not determine points - timer keeps track of time as a measure of speed, points are added same as no-timer method in all levels
-//10.19.22 at end of game, question exists to keep custom settings for challengeLevel=5. Need this question for all levels. Also need to add ability to replay 
+//PURPOSE OF PROGRAM------> practice basic math (+ - x %)
+
+
+//10.25.22 PROBLEM: custom setup needs validations and user warnings - currently accepts unusable data
+//10.25.22 ADD FEATURE SOON: add a "grand total" to final data display - one set of data that shows one overall score for all rounds combined
+//10.19.22 ADD FEATURE SOON: at end of game, question exists to keep custom settings for challengeLevel=5. Need this question for all levels. Also need to add ability to replay 
 			//the same settings instead of reentering mathType and challengeLevel=5
-//10.19.22 should customSettings array be permanent? create a user-identified array that they can pull up later? would need an option to erase it.
-//10.19.22 in custom level setup, maximum numbers are allowed to be smaller than the minimum numbers (for digits chosen) - add warning that all answers will be negative
-//10.23.22 at the end of a round, the game does not restart when Yes is selected to Do you want to play again? prompt
+//10.19.22 ADD FEATURE LATER: customSettings array for each user. will need an option to erase it. max number of users or warning when user hasn't been used for a while - for the 
+			//purpose of freeing up memory?
+//10.19.22 ADD FEATURE SOON: in custom level setup, maximum numbers are allowed to be smaller than the minimum numbers (for digits chosen) - add warning that all answers will be negative
 
-//practice basic + - x % math
+// 7.1.22 ADD FEATURE LATER: timer starts/stops needs to be added (make this a function that is called in each section if needed)
+//7.20.22 ADD FEATURE LATER: (fileWriter/printWriter) need to add an option to save the custom level setup
 
-import java.util.Random; //for random number generator
-import java.util.ArrayList; //for storing data for each round
-import java.util.Scanner; //for reading answer inputs for division
+//7.24.22 NOTE: timer does not determine points - timer keeps track of time as a measure of speed, points are added same as no-timer method in all levels
+
+
+
+
+import java.util.Random; //random number generator
+import java.util.ArrayList; //storing data for each round
+import java.util.Scanner; //reading answer inputs for division
 import java.io.FileWriter; //filewriter for high scores file
-import java.io.*; //for FileReader in case(8)
-import javax.swing.*; //for scroll pane
+import java.io.*; //FileReader in case(8)
+import javax.swing.*; //scroll pane @ end of game
 
 public class BasicMathPracticev2 {//2354
 
@@ -28,7 +36,7 @@ public class BasicMathPracticev2 {//2354
 		
 		int chooseAddorSub, chooseAddSubMultDiv,chooseMultorDiv, correctAnswer, correctAnswerDivPart1=0, correctAnswerDivPart2=0, correctAnswerScore=0, firstDigit=0, 
 				max1stDigit=0, max2ndDigit=0, min1stDigit=0, min2ndDigit=0, numOfProblems=0, pointTotal=0, remainder, remainderNumberAnswer=0, 
-				roundCount=1, roundNumDisplayCounter=0, scoreOutputCounter, secondDigit=0, totalCorrectAnswers=0, totalProblems=0, userGuess, userGuessPart1=0, 
+				roundCount=1, roundNumDisplayCounter=1, scoreOutputCounter, secondDigit=0, totalCorrectAnswers=0, totalProblems=0, userGuess, userGuessPart1=0, 
 				wholeNumberAnswer=0, wrongAnswerScore=0;
 		
 		String allowRemainders="", carryBorrow="", challengeLevel="", chooseAddorSubStr, chooseAddSubMultDivStr, chooseMultorDivStr, correctAnswerScoreInput="", mathType="", 
@@ -81,7 +89,7 @@ public class BasicMathPracticev2 {//2354
 		//--------------------------------------------------------------------------------------------------------------------------------------
 			
 	
-		while (playAgain.equalsIgnoreCase("Y") && (!mathType.equalsIgnoreCase("exit the game"))) {//2071
+		while (playAgain.equalsIgnoreCase("Y") && (!mathType.equalsIgnoreCase("exit the game"))) {//2033
 			//prompt for type of practice: addition, subtraction, multiplication, division, add & subtract, mult & divide, or all
 			mathType = JOptionPane.showInputDialog("Hello " + username + "!\n\n"
 														+ "What would you like to do today?\nEnter a number:\n\n"
@@ -1961,7 +1969,7 @@ public class BasicMathPracticev2 {//2354
 			
 			//add a way to play again
 			do {//1974
-				//prompt for play again? y/n
+				//prompt for play again? y/n (three options: no, playAgain same settings, playAgain new settings) // ***********************************NEED CUSTOM BUTTONS MADE
 				playAgain = JOptionPane.showInputDialog("Do you want to play again?\n\n(Y)es or (N)o");
 				//if invalid input is entered, display error message
 				if ((!playAgain.equalsIgnoreCase("y")) && (!playAgain.equalsIgnoreCase("n")))
@@ -1980,9 +1988,6 @@ public class BasicMathPracticev2 {//2354
 			if (playAgain.equalsIgnoreCase("Y")){//2036
 				//accumulate number of rounds
 				roundCount++;
-				
-				//reset all accumulators
-				JOptionPane.showMessageDialog(null, scoreRecord.get(0));
 		
 				//reset all accumulators except roundCount
 				finalScore=0;
@@ -2029,47 +2034,49 @@ public class BasicMathPracticev2 {//2354
 						wrongAnswerScore = 0;
 					}//2020
 				}//2003
-			}//1984
+			}//1984		  	
+		}//84 (play loop, while playAgain==y)
+		
+		
+		//when user is done playing, show data for all rounds played this time
+		scoreOutputCounter=0;
+		do{//2050
+			scoreOutput = scoreOutput  //initialized to empty string in variable assignments
+				+ "\n\nRound " + (roundNumDisplayCounter) + ": " 
+				+ "\n\tCorrect Answers: " + scoreRecord.get(scoreOutputCounter + 1) //index 1 in first set 
+				+ "\n\tTotal Problems: " + scoreRecord.get(scoreOutputCounter+2) //index 2 in first set
+				+ "\n\tTotal Points: " + scoreRecord.get(scoreOutputCounter) //index 0 in first set
+				+ "\n\tAccuracy: " + scoreRecord.get(scoreOutputCounter+3) + "%";  //index 3 in first set 
+			scoreOutputCounter+=4; //data from each round is a set of 4 items
+			roundNumDisplayCounter++;
+		}//2040
+		
+		//if playAgain==n, show final scores from all rounds
+		while (scoreOutputCounter<=(roundCount*4-4)); //original: (scoreOutputCounter<((roundCount*4)-1))
 	
-			//show scoreRecord data
-			scoreOutputCounter=0;
-			do{//2050
-				scoreOutput = scoreOutput
-					+ "\n\nRound " + (roundNumDisplayCounter) + ": " 
-					+ "\n\tCorrect Answers: " + scoreRecord.get(scoreOutputCounter+1) 
-					+ "\n\tTotal Problems: " + scoreRecord.get(scoreOutputCounter+2)
-					+ "\n\tTotal Points: " + scoreRecord.get(scoreOutputCounter)
-					+ "\n\tAccuracy: " + scoreRecord.get(scoreOutputCounter+3) + "%";
-				scoreRecord.get(scoreOutputCounter);
-				scoreOutputCounter+=4;
-				roundNumDisplayCounter++;
-			}//2040
-			while (scoreOutputCounter<((roundCount*4)-1));
-		
-			//Display Final Stats to Player
-			//set message to be displayed
-		  	String finalUserData = "Your Final Scores:\n\n" + scoreOutput;
-		
-		  	//create a JTextArea to hold the message
-		  	JTextArea textArea = new JTextArea(25, 40); //(height, width)
-		  	textArea.setText(finalUserData);
-		  	textArea.setEditable(false);
-		  	
-		  	//wrap a scrollpane around the textArea
-		  	JScrollPane scrollPane = new JScrollPane(textArea);
-		  	scrollPane.createVerticalScrollBar();
-		  	scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		
-		  	//display scrollPane (with text area inside it) in a message dialog
-		  	JOptionPane.showMessageDialog(null, scrollPane);
-				  	
-		  	//add a high score file for each level, and for overall (based on percentage of questions answered correctly)****************************************************
-		}//83
-	}//20
+		//Display Final Stats to Player
+		//set message to be displayed
+	  	String finalUserData = "Your Final Scores:\n\n" + scoreOutput;
+	
+	  	//create a JTextArea to hold the message
+	  	JTextArea textArea = new JTextArea(25, 40); //(height, width)
+	  	textArea.setText(finalUserData);
+	  	textArea.setEditable(false);
+	  	
+	  	//wrap a scrollpane around the textArea
+	  	JScrollPane scrollPane = new JScrollPane(textArea);
+	  	scrollPane.createVerticalScrollBar();
+	  	scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+	
+	  	//display scrollPane (with text area inside it) in a message dialog
+	  	JOptionPane.showMessageDialog(null, scrollPane);
+	  	
+	  	//add a high score file for each level, and for overall (based on percentage of questions answered correctly)****************************************************
+	}//20 (main)
 
-	//---------------------------------------------------------------------------------------------------------------------------------------
-	//------                                                      FUNCTIONS                                                           -------
-	//---------------------------------------------------------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//------                                                                      FUNCTIONS                                                                          -------
+	//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	//prompt for answer input
 	//verify that input is integer for add/sub/mult
@@ -2141,6 +2148,7 @@ public class BasicMathPracticev2 {//2354
 	
 	//calculate answer
 	public static int calculateAnswerAdd (int x, int y) {//2149
+		JOptionPane.showMessageDialog(null, "TEST -->  Answer = " + (x+y)); //*************************************************************************************TEST ONLY
 		return (x + y);
 	}//2147
 
@@ -2148,11 +2156,13 @@ public class BasicMathPracticev2 {//2354
 	public static double calculateAnswerDiv(double x, double y) {//2156
 		double z = x/y;
 		z = (Math.round(z*100.0))/100.0; //move decimal place 2 to the right, round last digit, move decimal back left 2 spots
+		JOptionPane.showMessageDialog(null, "TEST -->  Answer = " + (z)); //*************************************************************************************TEST ONLY
 		return z;
 	}//2152
 	
 	//calculate answer for division - whole number portion
 	public static int calculateAnswerDivPart1(int x, int y) {//2161
+		JOptionPane.showMessageDialog(null, "TEST -->  Answer = " + (x/y)); //*************************************************************************************TEST ONLY
 		return (x/y);
 	}//2159
 	
@@ -2163,6 +2173,7 @@ public class BasicMathPracticev2 {//2354
 		double c = (a/b) - (int)(a/b);
 		c = Math.round(c*100);
 		double z = c/100;
+		JOptionPane.showMessageDialog(null, "TEST -->  Answer = " + (z)); //*************************************************************************************TEST ONLY
 		return z;
 	}//2164
 	
@@ -2173,16 +2184,19 @@ public class BasicMathPracticev2 {//2354
 		double c = (a/b) - (int)(a/b);
 		c = Math.round(c*100);
 		int z = (int)c;	
+		JOptionPane.showMessageDialog(null, "TEST -->  Answer = " + (z)); //*************************************************************************************TEST ONLY
 		return z;
 	}//2174
 		
 	//calculate answer for subtraction
 	public static int calculateAnswerSub(int x, int y) {//2186
+		JOptionPane.showMessageDialog(null, "TEST -->  Answer = " + (x-y)); //*************************************************************************************TEST ONLY
 		return (x-y);
 	}//2184
 	
 	//calculate answer for multiplication
 	public static int calculateAnswerMult(int x, int y) {//2191
+		JOptionPane.showMessageDialog(null, "TEST -->  Answer = " + (x*y)); //*************************************************************************************TEST ONLY
 		return (x*y);
 	}//2189
 		
