@@ -2,8 +2,8 @@
 
 
 //10.25.22 PROBLEM: custom setup needs validations and user warnings - currently accepts unusable data
-//10.25.22 ADD FEATURE SOON: add a "grand total" to final data display - one set of data that shows one overall score for all rounds combined
-//10.19.22 ADD FEATURE SOON: at end of game, question exists to keep custom settings for challengeLevel=5. Need this question for all levels. Also need to add ability to replay 
+//10.26.22 PROBLEM: division section does not work at all. when confirmation screen shows, it shows all correct answers as "R". system is requiring decimal input for whole number answers
+//10.25.22 ADD FEATURE SOON: add a "grand total" to final data display - one set of data that shows one overall score for all rounds combined//10.19.22 ADD FEATURE SOON: at end of game, question exists to keep custom settings for challengeLevel=5. Need this question for all levels. Also need to add ability to replay 
 			//the same settings instead of reentering mathType and challengeLevel=5
 //10.19.22 ADD FEATURE LATER: customSettings array for each user. will need an option to erase it. max number of users or warning when user hasn't been used for a while - for the 
 			//purpose of freeing up memory?
@@ -37,11 +37,11 @@ public class BasicMathPracticev2 {//2354
 		int chooseAddorSub, chooseAddSubMultDiv,chooseMultorDiv, correctAnswer, correctAnswerDivPart1=0, correctAnswerDivPart2=0, correctAnswerScore=0, firstDigit=0, 
 				max1stDigit=0, max2ndDigit=0, min1stDigit=0, min2ndDigit=0, numOfProblems=0, pointTotal=0, remainder, remainderNumberAnswer=0, 
 				roundCount=1, roundNumDisplayCounter=1, scoreOutputCounter, secondDigit=0, totalCorrectAnswers=0, totalProblems=0, userGuess, userGuessPart1=0, 
-				wholeNumberAnswer=0, wrongAnswerScore=0;
+				wholeNumberAnswer=0, wrongAnswerScore=0, rounds=0, correct=0, problems=0, points=0;
 		
 		String allowRemainders="", carryBorrow="", challengeLevel="", chooseAddorSubStr, chooseAddSubMultDivStr, chooseMultorDivStr, correctAnswerScoreInput="", mathType="", 
 				negativeAnswer="", numOfProblemsInput="", playAgain, remainderEntered="", remainderInput, scoreOutput="", userGuessInput="", 
-				username, wholeNumbersEntered="", wholeOrDecimal="", wrongAnswerScoreInput="", line, saveCustomSettings, minMaxInput;
+				username, wholeNumbersEntered="", wholeOrDecimal="", wrongAnswerScoreInput="", line, saveCustomSettings, minMaxInput, grandTotalString="";
 		
 		boolean noBorrowing, noCarrying, noNegatives, noRemainders;
 		
@@ -2037,16 +2037,32 @@ public class BasicMathPracticev2 {//2354
 			}//1984		  	
 		}//84 (play loop, while playAgain==y)
 		
+		//calculate grand total user stat
+		for (int i=0;i<(scoreRecord.size()/4);i++) {
+			rounds += roundNumDisplayCounter;                  //number of rounds
+			System.out.println("TEST: rounds: " + rounds);
+			correct += scoreRecord.get(i+1);                   //number of correct answers
+			System.out.println("TEST: correct: " + correct);
+			problems += scoreRecord.get(i + 2);                //number of problems
+			System.out.println("TEST: problems: " + problems);
+			points += scoreRecord.get(i);                      //number of points earned (may not be one per problem if custom setup is done)
+			System.out.println("TEST: points: " + points);
+			grandTotalString = "You played " + rounds + " rounds\n"
+								+ "and got " + correct + " correct\n"
+								+ "out of " + problems + " total problems\n"
+								+ "and earned " + points + " points\n\n";
+		}
 		
 		//when user is done playing, show data for all rounds played this time
 		scoreOutputCounter=0;
 		do{//2050
 			scoreOutput = scoreOutput  //initialized to empty string in variable assignments
-				+ "\n\nRound " + (roundNumDisplayCounter) + ": " 
+				+ "\n\1nRound " + (roundNumDisplayCounter) + ": " 
 				+ "\n\tCorrect Answers: " + scoreRecord.get(scoreOutputCounter + 1) //index 1 in first set 
 				+ "\n\tTotal Problems: " + scoreRecord.get(scoreOutputCounter+2) //index 2 in first set
 				+ "\n\tTotal Points: " + scoreRecord.get(scoreOutputCounter) //index 0 in first set
 				+ "\n\tAccuracy: " + scoreRecord.get(scoreOutputCounter+3) + "%";  //index 3 in first set 
+				
 			scoreOutputCounter+=4; //data from each round is a set of 4 items
 			roundNumDisplayCounter++;
 		}//2040
@@ -2056,7 +2072,7 @@ public class BasicMathPracticev2 {//2354
 	
 		//Display Final Stats to Player
 		//set message to be displayed
-	  	String finalUserData = "Your Final Scores:\n\n" + scoreOutput;
+	  	String finalUserData = "Your Final Scores:\n\n" + grandTotalString + scoreOutput;
 	
 	  	//create a JTextArea to hold the message
 	  	JTextArea textArea = new JTextArea(25, 40); //(height, width)
